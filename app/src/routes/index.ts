@@ -2,7 +2,10 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import { LoginPage, HomePage } from '@/pages'
 
 function isLoggedIn(): boolean {
-    return !!localStorage.getItem('token')
+    return (
+        sessionStorage.getItem('spotifyLogin') === 'true' ||
+        sessionStorage.getItem('youtubeLogin') === 'true'
+    )
 }
 
 const routes: Array<RouteRecordRaw> = [
@@ -18,6 +21,8 @@ const router = createRouter({
 router.beforeEach((to, _from, next) => {
     if (to.name !== 'Login' && !isLoggedIn()) {
         next({ name: 'Login' })
+    } else if (to.name === 'Login' && isLoggedIn()) {
+        next({ name: 'Home' })
     } else {
         next()
     }

@@ -1,6 +1,8 @@
 import axios from 'axios'
 import querystring from 'querystring'
 import { config } from '../config'
+import { isEmpty } from 'lodash'
+import { APIError } from '../models'
 
 export class SpotifyService {
     public static async buildAuthQueryParams(): Promise<string> {
@@ -15,11 +17,11 @@ export class SpotifyService {
         return authQueryParams
     }
 
-    public static async getAccessToken(
+    public static async generateCookieData(
         spotifyAccessCode: string | undefined
     ): Promise<string | undefined> {
         if (!spotifyAccessCode) {
-            return undefined
+            throw new APIError('Invalid Spotify access code', 500)
         }
 
         const response = await axios.post(
@@ -37,7 +39,15 @@ export class SpotifyService {
             }
         )
 
-        const { access_token: token } = response?.data ?? {}
-        return token
+        const responseData = response?.data ?? {}
+
+        if (isEmpty(responseData)) {
+            throw new APIError('Invalid Spotify access code', 500)
+        }
+
+        const { expires_in } = responseData
+        const expires_at = Date.now() + expires_in * 1000
+
+        return Object.assign({}, responseData, { expires_at })
     }
 }

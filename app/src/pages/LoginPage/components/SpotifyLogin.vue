@@ -7,6 +7,8 @@
 <script lang="ts">
 import { defineComponent, onMounted, onBeforeUnmount } from 'vue'
 import { NeonButton } from '@/components'
+import { useRouter } from 'vue-router'
+import { nextTick } from 'vue'
 
 export default defineComponent({
     name: 'SpotifyLogin',
@@ -14,6 +16,8 @@ export default defineComponent({
         NeonButton
     },
     setup() {
+        const router = useRouter()
+
         const loginWithSpotify = () => {
             const authUrl = `${import.meta.env.VITE_BACKEND_URI}/api/auth/spotify`
             window.open(authUrl, '_blank', 'width=500,height=600')
@@ -28,12 +32,22 @@ export default defineComponent({
                 return
             }
 
-            const data = event.data
-            if (data.status === 'success') {
-                console.log('Spotify login successful, token:', data.token)
-            } else {
-                console.error('Spotify login failed.')
+            const { status, cookieData } = (event.data ?? {}) as {
+                status: 'success' | 'error'
+                cookieData?: string
             }
+
+            if (!event.data || status !== 'success') {
+                console.error('Spotify login failed.')
+                return
+            }
+
+            document.cookie = `cookieData=${cookieData!}; path=/; secure; samesite=strict`
+            sessionStorage.setItem('spotifyLogin', 'true')
+
+            nextTick(() => {
+                router.push({ name: 'Home' })
+            })
         }
 
         onMounted(() => {
