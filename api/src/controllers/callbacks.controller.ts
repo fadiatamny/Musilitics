@@ -1,9 +1,7 @@
 import { Controller, Route, Get, Request } from 'tsoa'
 import { Request as ExpressRequest } from 'express'
-
-import axios from 'axios'
-import querystring from 'querystring'
 import { config } from '../config'
+import { SpotifyService } from '../services'
 
 @Route('/callbacks')
 export class CallbacksController extends Controller {
@@ -13,23 +11,7 @@ export class CallbacksController extends Controller {
     ): Promise<void> {
         const code = req.query.code as string
         const res = req.res!
-        //todo: move to spotify.service.ts
-        const tokenResponse = await axios.post(
-            'https://accounts.spotify.com/api/token',
-            querystring.stringify({
-                code,
-                redirect_uri: config.spotify.redirectUri,
-                grant_type: 'authorization_code'
-            }),
-            {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    Authorization: `Basic ${Buffer.from(`${config.spotify.clientId}:${config.spotify.clientSecret}`).toString('base64')}`
-                }
-            }
-        )
-
-        const { access_token: token } = tokenResponse.data
+        const token = await SpotifyService.getAccessToken(code)
 
         res.render('loginCallback', {
             token,
