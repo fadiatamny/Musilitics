@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Spotify Login Callback</title>
+  </head>
+  <body>
+    <script>
+      <% if (token) { %>
+        window.opener.postMessage({ status: 'success', token: '<%= token %>' }, '<%= clientOrigin %>');
+      <% } else { %>
+        window.opener.postMessage({ status: 'error' }, '<%= clientOrigin %>');
+      <% } %>
+      window.close();
+    </script>
+    <p>
+      <% if (token) { %>
+        Login successful. You can close this window.
+      <% } else { %>
+        Login failed. You can close this window.
+      <% } %>
+    </p>
+  </body>
+</html>
