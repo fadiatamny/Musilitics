@@ -19,7 +19,7 @@ export class SpotifyService {
 
     public static async generateCookieData(
         spotifyAccessCode: string | undefined
-    ): Promise<string | undefined> {
+    ): Promise<string> {
         if (!spotifyAccessCode) {
             throw new APIError('Invalid Spotify access code', 500)
         }
