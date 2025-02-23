@@ -1,8 +1,8 @@
 export class APIError extends Error {
     public statusCode: number
-    public metadata: any
+    public metadata: unknown
 
-    constructor(message: string, statusCode: number, metadata?: any) {
+    constructor(message: string, statusCode: number, metadata?: unknown) {
         super(message)
         this.statusCode = statusCode
         this.metadata = metadata

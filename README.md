@@ -3,7 +3,7 @@
 A better way to see your music habits and trends clearly
 
 ### Supported Music Platforms
-- [ ] [Spotify](https://www.spotify.com/)
+- [X] [Spotify](https://www.spotify.com/)
 - [ ] [Youtube Music](https://music.youtube.com/)
 
 ----
