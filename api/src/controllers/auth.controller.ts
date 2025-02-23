@@ -10,6 +10,7 @@ export class AuthController extends Controller {
     public async authSpotify(@Request() req: ExpressRequest): Promise<void> {
         const res = req.res!
 
+        //todo: move to spotify.service.ts
         const scope = 'user-read-private user-read-email playlist-read-private'
         const authQueryParams = querystring.stringify({
             client_id: config.spotify.clientId,

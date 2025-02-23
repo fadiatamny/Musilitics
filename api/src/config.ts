@@ -10,5 +10,5 @@ export const config = {
         ? JSON.parse(process.env.ALLOWED_ORIGINS)
         : []) as string[],
     appUri: process.env.APP_URI || 'http://localhost:5173',
-    port: process.env.PORT || 4000
+    port: process.env.PORT || 3000
 }

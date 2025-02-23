@@ -13,7 +13,7 @@ export class CallbacksController extends Controller {
     ): Promise<void> {
         const code = req.query.code as string
         const res = req.res!
-
+        //todo: move to spotify.service.ts
         const tokenResponse = await axios.post(
             'https://accounts.spotify.com/api/token',
             querystring.stringify({
