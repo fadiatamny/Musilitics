@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from 'express'
 import { ValidateError } from 'tsoa'
 import { APIError } from '../models'
-import { logger } from '../shared/logger'
+import { Logger } from '../shared/logger'
 
 export class ErrorHandler {
     private _isValidationError(error: any): error is ValidateError {
@@ -29,7 +29,7 @@ export class ErrorHandler {
         message: string = 'Unknown Error Occurred',
         metadata?: { [key: string]: any }
     ) {
-        logger.error(`Error Occurred - ${message}`, {
+        Logger.error(`Error Occurred - ${message}`, {
             body: req.body,
             params: req.params,
             ...metadata

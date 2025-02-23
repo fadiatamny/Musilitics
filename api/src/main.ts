@@ -11,7 +11,7 @@ import {
     traceMiddleware,
     unknownMiddleware
 } from './middlewares'
-import { logger } from './shared'
+import { Logger } from './shared'
 import path from 'path'
 
 function setupEJS(app: Express) {
@@ -64,15 +64,15 @@ async function main() {
     setupRoutes(app)
     try {
         app.listen(config.port, () => {
-            logger.info(`Server running on port ${config.port}`)
+            Logger.info(`Server running on port ${config.port}`)
         })
     } catch (e) {
-        logger.error('Unable to start the server', e)
+        Logger.error('Unable to start the server', e as Error)
         process.exit(1)
     }
 }
 
 main().catch((e) => {
-    logger.error('Error occured', e)
+    Logger.error('Error occured', e)
     process.exit(1)
 })
