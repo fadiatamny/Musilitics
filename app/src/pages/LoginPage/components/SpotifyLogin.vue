@@ -1,14 +1,18 @@
 <template>
-    <div>
-        <button @click="loginWithSpotify">Login with Spotify</button>
-    </div>
+    <NeonButton @click="loginWithSpotify" color="#1db954">
+        Login with Spotify
+    </NeonButton>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, onBeforeUnmount } from 'vue'
+import { NeonButton } from '@/components'
 
 export default defineComponent({
     name: 'SpotifyLogin',
+    components: {
+        NeonButton
+    },
     setup() {
         const loginWithSpotify = () => {
             const authUrl = `${import.meta.env.VITE_BACKEND_URI}/api/auth/spotify`
@@ -46,3 +50,5 @@ export default defineComponent({
     }
 })
 </script>
+
+<style scoped lang="scss"></style>
