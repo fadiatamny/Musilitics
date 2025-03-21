@@ -4,6 +4,8 @@
 import type { TsoaRoute } from '@tsoa/runtime';
 import {  fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { MetricsController } from './controllers/metrics.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { HelloController } from './controllers/hello.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { CallbacksController } from './controllers/callbacks.controller';
@@ -16,6 +18,26 @@ import type { Request as ExRequest, Response as ExResponse, RequestHandler, Rout
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
+    "SpotifyProfile": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "image": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "APISpotifyDetails": {
+        "dataType": "refObject",
+        "properties": {
+            "profile": {"ref":"SpotifyProfile","required":true},
+            "tracks": {"dataType":"array","array":{"dataType":"any"},"required":true},
+            "genres": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "artists": {"dataType":"array","array":{"dataType":"any"},"required":true},
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
 const templateService = new ExpressTemplateService(models, {"noImplicitAdditionalProperties":"ignore","bodyCoercion":true});
 
@@ -33,6 +55,35 @@ export function RegisterRoutes(app: Router) {
 
 
     
+        const argsMetricsController_spotifyDetails: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/api/metrics/spotify',
+            ...(fetchMiddlewares<RequestHandler>(MetricsController)),
+            ...(fetchMiddlewares<RequestHandler>(MetricsController.prototype.spotifyDetails)),
+
+            async function MetricsController_spotifyDetails(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMetricsController_spotifyDetails, request, response });
+
+                const controller = new MetricsController();
+
+              await templateService.apiHandler({
+                methodName: 'spotifyDetails',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsHelloController_hello: Record<string, TsoaRoute.ParameterSchema> = {
         };
         app.get('/api/hello',

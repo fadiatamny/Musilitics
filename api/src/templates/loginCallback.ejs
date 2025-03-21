@@ -6,7 +6,7 @@
   <body>
     <script>
       <% if (cookieData) { %>
-        window.opener.postMessage({ status: 'success', cookieData: '<%= cookieData %>' }, '<%= clientOrigin %>');
+        window.opener.postMessage({ status: 'success', ['<%= cookieName %>']: '<%= cookieData %>' }, '<%= clientOrigin %>');
       <% } else { %>
         window.opener.postMessage({ status: 'error' }, '<%= clientOrigin %>');
       <% } %>

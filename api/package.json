@@ -20,7 +20,8 @@
         "lodash": "^4.17.21",
         "querystring": "^0.2.1",
         "uuid": "^11.1.0",
-        "winston": "^3.13.0"
+        "winston": "^3.13.0",
+        "cookie-parser": "^1.4.7"
     },
     "devDependencies": {
         "@types/express": "^4.17.21",
@@ -32,6 +33,7 @@
         "prettier": "^3.5.2",
         "ts-node": "^10.9.2",
         "tsoa": "^6.2.1",
-        "typescript": "^5.7.3"
+        "typescript": "^5.7.3",
+        "@types/cookie-parser": "^1.4.8"
     }
 }
