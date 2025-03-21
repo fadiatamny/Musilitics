@@ -1,11 +1,13 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import { LoginPage, HomePage } from '@/pages'
+import { cookieExists } from '@/utils'
+import { config } from '@/config'
+
+const spotifyCookieName = config.spotify.cookieName || 'spotifyCookie'
+const youtubeCookieName = config.youtube.cookieName || 'youtubeCookie'
 
 function isLoggedIn(): boolean {
-    return (
-        sessionStorage.getItem('spotifyLogin') === 'true' ||
-        sessionStorage.getItem('youtubeLogin') === 'true'
-    )
+    return cookieExists(spotifyCookieName) || cookieExists(youtubeCookieName)
 }
 
 const routes: Array<RouteRecordRaw> = [

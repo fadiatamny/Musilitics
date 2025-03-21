@@ -14,6 +14,6 @@ const app = createApp(App)
 app.use(router)
 app.use(Quasar, {
     plugins: {},
-    config: { dark: true }
+  config: { dark: true }
 })
 app.mount('#app')
