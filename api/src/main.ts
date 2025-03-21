@@ -5,6 +5,7 @@ import express, { Express } from 'express'
 import { config } from './config'
 import { RegisterRoutes } from './routes'
 import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
 import {
     corsMiddleware,
     errorMiddleware,
@@ -23,6 +24,7 @@ function setupEJS(app: Express) {
 function prepareApp(app: Express) {
     setupEJS(app)
     app.use(corsMiddleware)
+    app.use(cookieParser());
     app.use(bodyParser.urlencoded({ extended: true }))
     app.use(bodyParser.json())
     app.use(sessionMiddleware)

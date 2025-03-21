@@ -2,28 +2,23 @@
     <q-layout view="hhh lpp fff">
         <q-header elevated class="transparent">
             <q-toolbar>
-                <!-- <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" /> -->
                 <q-avatar size="64px">
-                    <!-- <img src="./assets/logo.png" /> -->
                     <img src="./assets/logo-box.png" />
                 </q-avatar>
                 <q-toolbar-title class="text-glow text-h5">
                     Musilitics
                 </q-toolbar-title>
+
+                <q-btn
+                    class="text-glow"
+                    dense
+                    flat
+                    round
+                    :icon="darkMode ? 'dark_mode' : 'light_mode'"
+                    @click="toggleDarkMode"
+                />
             </q-toolbar>
         </q-header>
-
-        <!-- todo: cleanup this file -->
-        <!-- <q-drawer
-            show-if-above
-            v-model="leftDrawerOpen"
-            side="left"
-            bordered
-            dark
-            mini
-            overlay
-        >
-        </q-drawer> -->
 
         <q-page-container>
             <div style="padding: 15px 15px; width: 100vw; height: 90vh">
@@ -45,17 +40,29 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue'
+import { ref, defineComponent, onMounted } from 'vue'
+import { useQuasar } from 'quasar'
 
 export default defineComponent({
     setup() {
-        const leftDrawerOpen = ref(false)
+        const $q = useQuasar()
+        const darkMode = ref($q.dark.isActive)
+
+        onMounted(() => {
+            darkMode.value = sessionStorage.getItem('darkMode') === 'true'
+
+            $q.dark.set(darkMode.value)
+        })
+
+        const toggleDarkMode = () => {
+            darkMode.value = !darkMode.value
+            $q.dark.set(darkMode.value)
+            sessionStorage.setItem('darkMode', darkMode.value.toString())
+        }
 
         return {
-            leftDrawerOpen,
-            toggleLeftDrawer() {
-                leftDrawerOpen.value = !leftDrawerOpen.value
-            }
+            darkMode,
+            toggleDarkMode
         }
     }
 })

@@ -1,9 +1,19 @@
 :root {
+    --text-color: #404040;
+    --subtext-color: #606060;
+    --q-third: #4f8986;
+    --panel-background: #f5f7fa;
+    --neon-highlight: rgba(0, 0, 0, 0.2);
+    --card-background: rgba(244, 241, 255, 0.56);
+}
+
+body.body--dark {
     --text-color: #e0e0e0;
     --subtext-color: #a0a0a0;
     --q-third: #7fb8b5;
     --panel-background: #252730;
     --neon-highlight: rgba(255, 255, 255, 0.8);
+    --card-background: rgba(37, 39, 48, 1);
 }
 
 .text-glow {

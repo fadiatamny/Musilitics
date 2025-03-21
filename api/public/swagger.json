@@ -6,7 +6,54 @@
 		"parameters": {},
 		"requestBodies": {},
 		"responses": {},
-		"schemas": {},
+		"schemas": {
+			"SpotifyProfile": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"image": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"name",
+					"image"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"APISpotifyDetails": {
+				"properties": {
+					"profile": {
+						"$ref": "#/components/schemas/SpotifyProfile"
+					},
+					"tracks": {
+						"items": {},
+						"type": "array"
+					},
+					"genres": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"artists": {
+						"items": {},
+						"type": "array"
+					}
+				},
+				"required": [
+					"profile",
+					"tracks",
+					"genres",
+					"artists"
+				],
+				"type": "object",
+				"additionalProperties": true
+			}
+		},
 		"securitySchemes": {}
 	},
 	"info": {
@@ -15,6 +62,25 @@
 		"contact": {}
 	},
 	"paths": {
+		"/metrics/spotify": {
+			"get": {
+				"operationId": "Get Spotify Analytical Data",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APISpotifyDetails"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
 		"/hello": {
 			"get": {
 				"operationId": "Hello",
@@ -28,18 +94,6 @@
 								}
 							}
 						}
-					}
-				},
-				"security": [],
-				"parameters": []
-			}
-		},
-		"/callbacks/spotify": {
-			"get": {
-				"operationId": "CallbackSpotify",
-				"responses": {
-					"204": {
-						"description": "No content"
 					}
 				},
 				"security": [],

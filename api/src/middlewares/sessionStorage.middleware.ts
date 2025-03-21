@@ -6,5 +6,5 @@ export const sessionMiddleware = (
     res: Response,
     next: NextFunction
 ) => {
-    SessionStorage.run(next)
+    return SessionStorage.run(next)
 }

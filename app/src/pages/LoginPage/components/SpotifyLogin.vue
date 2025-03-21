@@ -9,6 +9,12 @@ import { defineComponent, onMounted, onBeforeUnmount } from 'vue'
 import { NeonButton } from '@/components'
 import { useRouter } from 'vue-router'
 import { nextTick } from 'vue'
+import { config } from '@/config'
+
+type EventData = {
+    status: string
+    [key: string]: string
+}
 
 export default defineComponent({
     name: 'SpotifyLogin',
@@ -32,17 +38,15 @@ export default defineComponent({
                 return
             }
 
-            const { status, cookieData } = (event.data ?? {}) as {
-                status: 'success' | 'error'
-                cookieData?: string
-            }
+            const { status, [config.spotify.cookieName]: cookieData } =
+                (event.data ?? {}) as EventData
 
             if (!event.data || status !== 'success') {
                 console.error('Spotify login failed.')
                 return
             }
 
-            document.cookie = `cookieData=${cookieData!}; path=/; secure; samesite=strict`
+            document.cookie = `${config.spotify.cookieName}=${cookieData!}; path=/; secure; samesite=strict`
             sessionStorage.setItem('spotifyLogin', 'true')
 
             nextTick(() => {
