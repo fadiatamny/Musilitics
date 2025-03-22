@@ -1,5 +1,5 @@
 <template>
-    <div class="dashboard-container">
+    <div class="dashboard-container" :style="computedStyles">
         <div
             style="
                 display: flex;
@@ -36,6 +36,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { QSkeleton, QBtn, QIcon } from 'quasar'
+import { toRefs, computed } from 'vue'
 
 export default defineComponent({
     name: 'SkeletonDashboard',
@@ -48,9 +49,23 @@ export default defineComponent({
         isError: {
             type: Boolean,
             default: false
+        },
+        color: {
+            type: String,
+            required: true
         }
     },
-    setup() {}
+    setup(props: { color: string }) {
+        const { color } = toRefs(props)
+
+        const computedStyles = computed(() => ({
+            '--neon-color': color.value
+        }))
+
+        return {
+            computedStyles
+        }
+    }
 })
 </script>
 
@@ -61,8 +76,8 @@ export default defineComponent({
     gap: 20px;
     padding: 20px;
 
-    color: var(--neon-button-color, #1db954);
-    border: 2px solid var(--neon-button-color, #1db954);
+    color: var(--neon-color, #1db954);
+    border: 2px solid var(--neon-color, #1db954);
     box-shadow: 0 0 5vw rgba(180, 180, 255, 0.3);
     backdrop-filter: blur(1vw) saturate(1.8);
     -webkit-backdrop-filter: blur(1vw) saturate(1.8);

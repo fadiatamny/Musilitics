@@ -5,6 +5,7 @@
             align-items: center;
             justify-content: space-between;
         "
+        :style="computedStyles"
     >
         <div class="profile-wrapper">
             <QAvatar>
@@ -35,6 +36,10 @@ export default defineComponent({
         profile: {
             type: Object as PropType<SpotifyProfile | null>,
             required: true
+        },
+        color: {
+            type: String,
+            required: true
         }
     },
     components: {
@@ -42,8 +47,8 @@ export default defineComponent({
         QIcon,
         QBtn
     },
-    setup(props: { profile: SpotifyProfile | null }) {
-        const { profile } = toRefs(props)
+    setup(props: { profile: SpotifyProfile | null; color: string }) {
+        const { profile, color } = toRefs(props)
 
         const profileImage = computed(
             () => profile.value?.image ?? '@/assets/default-profile.svg'
@@ -51,9 +56,14 @@ export default defineComponent({
 
         const profileName = computed(() => profile.value?.name ?? 'Guest')
 
+        const computedStyles = computed(() => ({
+            '--neon-color': color.value
+        }))
+
         return {
             profileImage,
-            profileName
+            profileName,
+            computedStyles
         }
     }
 })
@@ -72,9 +82,9 @@ export default defineComponent({
     height: 40px;
     border-radius: 50%;
 
-    color: var(--neon-button-color, #1db954);
-    box-shadow: 0 0 8px var(--neon-button-color, #1db954);
-    border: 2px solid var(--neon-button-color, #1db954);
+    color: var(--neon-color, #1db954);
+    box-shadow: 0 0 8px var(--neon-color, #1db954);
+    border: 2px solid var(--neon-color, #1db954);
 }
 
 .profile-name {

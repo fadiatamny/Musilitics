@@ -2,10 +2,10 @@
     <div
         v-if="!loading && !error"
         style="min-width: 70%; max-width: 70%; width: 100%"
-        :style="hidden ? `disaply: none` : ''"
+        :style="computedStyles"
     >
         <div class="dashboard-container">
-            <UserProfile :profile="profileData" @logout="handleLogout" />
+            <UserProfile :profile="profileData" @logout="handleLogout" :color="neonColor" />
             <q-separator inset />
             <TracksTable :tracks="tracksData" />
             <q-separator inset />
@@ -27,6 +27,7 @@
         @logout="handleLogout"
         :isError="!!error"
         style="min-width: 70%; max-width: 70%; width: 100%"
+        :color="neonColor"
     />
 </template>
 
@@ -42,7 +43,7 @@ import {
 } from './components'
 
 import { deleteCookie, fetchSpotifyData, fetchYoutubeData } from '@/utils'
-import { toRefs } from 'vue'
+import { toRefs, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import type {
     SpotifyTrack,
@@ -74,8 +75,8 @@ export default defineComponent({
             default: false
         }
     },
-    setup(props: { vendor: string }) {
-        const { vendor } = toRefs(props)
+    setup(props: { vendor: string; hidden: boolean }) {
+        const { vendor, hidden } = toRefs(props)
         const router = useRouter()
 
         const profileData = ref<SpotifyProfile | null>(null)
@@ -84,6 +85,13 @@ export default defineComponent({
         const genresData = ref<SpotifyGenre[]>([])
         const error = ref<unknown | null>(null)
         const loading = ref(true)
+
+        const neonColor = computed(() => vendor.value === 'spotify' ? '#1DB954' : '#FF0000')
+        const computedStyles = computed(() => ({
+            display: hidden.value ? 'none' : 'block',
+            '--neon-color': vendor.value === 'spotify' ? '#1DB954' : '#FF0000'
+        }))
+
 
         const handleLogout = () => {
             const vendorName = vendor.value as 'spotify' | 'youtube'
@@ -95,11 +103,11 @@ export default defineComponent({
         }
 
         onMounted(async () => {
-            const dataFetcher = vendor.value === 'spotify' ? fetchSpotifyData : fetchYoutubeData
+            const dataFetcher =
+                vendor.value === 'spotify' ? fetchSpotifyData : fetchYoutubeData
 
             try {
-                const { profile, tracks, artists, genres } =
-                    await dataFetcher()
+                const { profile, tracks, artists, genres } = await dataFetcher()
 
                 profileData.value = profile
                 tracksData.value = tracks
@@ -112,6 +120,8 @@ export default defineComponent({
         })
 
         return {
+            computedStyles,
+            neonColor,
             loading,
             error,
             handleLogout,
@@ -132,7 +142,7 @@ export default defineComponent({
     padding: 20px;
     width: 100%;
 
-    border: 2px solid var(--neon-button-color, #1db954);
+    border: 2px solid var(--neon-color, #1db954);
     box-shadow: 0 0 5vw rgba(180, 180, 255, 0.3);
     backdrop-filter: blur(1vw) saturate(1.8);
     -webkit-backdrop-filter: blur(1vw) saturate(1.8);
