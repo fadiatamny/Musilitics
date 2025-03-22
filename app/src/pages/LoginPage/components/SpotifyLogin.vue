@@ -25,7 +25,7 @@ export default defineComponent({
         }
 
         const handleAuthMessage = (event: MessageEvent) => {
-            if (handleLoginEvent(event)) {
+            if (handleLoginEvent('spotify', event)) {
                 nextTick(() => {
                     router.push({ name: 'Home' })
                 })

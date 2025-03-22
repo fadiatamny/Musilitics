@@ -2,11 +2,14 @@ import { config } from '@/config'
 
 type EventData = {
     status: string
-    type: 'login' | 'refresh'
+    type: string
     [key: string]: any
 }
 
-export const handleLoginEvent = (event: MessageEvent<EventData>) => {
+export const handleLoginEvent = (
+    source: 'youtube' | 'spotify',
+    event: MessageEvent<EventData>
+) => {
     if (event.origin !== import.meta.env.VITE_BACKEND_URI) {
         console.warn('Received message from untrusted origin:', event.origin)
         return
@@ -21,10 +24,9 @@ export const handleLoginEvent = (event: MessageEvent<EventData>) => {
         return
     }
 
-    const { [config.spotify.cookieName]: cookieData } = event.data ?? {}
-
-    document.cookie = `${config.spotify.cookieName}=${cookieData!}; Path=/; Secure; SameSite=Strict`
-
+    const cookieName = config[source].cookieName
+    const { [cookieName]: cookieData } = event.data ?? {}
+    document.cookie = `${cookieName}=${cookieData!}; Path=/; Secure; SameSite=Strict`
 
     return 'success'
 }
