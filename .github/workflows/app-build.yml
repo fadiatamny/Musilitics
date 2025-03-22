@@ -1,6 +1,7 @@
 name: App Build Check
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
