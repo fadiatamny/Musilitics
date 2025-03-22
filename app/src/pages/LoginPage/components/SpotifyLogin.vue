@@ -9,12 +9,7 @@ import { defineComponent, onMounted, onBeforeUnmount } from 'vue'
 import { NeonButton } from '@/components'
 import { useRouter } from 'vue-router'
 import { nextTick } from 'vue'
-import { config } from '@/config'
-
-type EventData = {
-    status: string
-    [key: string]: string
-}
+import { handleLoginEvent } from '@/utils'
 
 export default defineComponent({
     name: 'SpotifyLogin',
@@ -30,28 +25,11 @@ export default defineComponent({
         }
 
         const handleAuthMessage = (event: MessageEvent) => {
-            if (event.origin !== import.meta.env.VITE_BACKEND_URI) {
-                console.warn(
-                    'Received message from untrusted origin:',
-                    event.origin
-                )
-                return
+            if (handleLoginEvent(event)) {
+                nextTick(() => {
+                    router.push({ name: 'Home' })
+                })
             }
-
-            const { status, [config.spotify.cookieName]: cookieData } =
-                (event.data ?? {}) as EventData
-
-            if (!event.data || status !== 'success') {
-                console.error('Spotify login failed.')
-                return
-            }
-
-            document.cookie = `${config.spotify.cookieName}=${cookieData!}; path=/; secure; samesite=strict`
-            sessionStorage.setItem('spotifyLogin', 'true')
-
-            nextTick(() => {
-                router.push({ name: 'Home' })
-            })
         }
 
         onMounted(() => {

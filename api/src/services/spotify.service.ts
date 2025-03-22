@@ -29,7 +29,7 @@ export class SpotifyService {
 
     public static async generateCookieData(
         spotifyAccessCode: string | undefined
-    ): Promise<string> {
+    ): Promise<Record<string, any>> {
         if (!spotifyAccessCode) {
             throw new APIError('Invalid Spotify access code', 500)
         }
@@ -40,6 +40,35 @@ export class SpotifyService {
                 code: spotifyAccessCode,
                 redirect_uri: config.spotify.redirectUri,
                 grant_type: 'authorization_code'
+            }),
+            {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    Authorization: `Basic ${Buffer.from(`${config.spotify.clientId}:${config.spotify.clientSecret}`).toString('base64')}`
+                }
+            }
+        )
+
+        const responseData = response?.data ?? {}
+
+        if (isEmpty(responseData)) {
+            throw new APIError('Invalid Spotify access code', 500)
+        }
+
+        const { expires_in } = responseData
+        const expires_at = Date.now() + expires_in * 1000
+
+        return Object.assign({}, responseData, { expires_at })
+    }
+
+    public static async refreshAccessToken(): Promise<Record<string, any>> {
+        const refreshToken = SessionStorage.get<string>('refreshToken')
+
+        const response = await axios.post(
+            'https://accounts.spotify.com/api/token',
+            querystring.stringify({
+                grant_type: 'refresh_token',
+                refresh_token: refreshToken!
             }),
             {
                 headers: {

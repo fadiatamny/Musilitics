@@ -13,9 +13,15 @@ export const buildAuthMiddleware = (authScope: 'spotify' | 'youtube') => {
             return next(new APIError('Unauthorized', 401))
         }
 
-        // todo if expired refesh token with login
+        const parsed = extractAuthFromCookie(cookie)
 
-        extractAuthFromCookie(cookie)
+        if (req.path.includes('/refresh')) {
+            return next()
+        }
+
+        if (parsed.expires_at < Date.now() + 1000 * 60 * 5) {
+            return next(new APIError('Token expired', 401))
+        }
 
         next()
     }
@@ -37,4 +43,7 @@ function extractAuthFromCookie(cookie: string) {
 
     SessionStorage.set('token', parsed)
     SessionStorage.set('accessToken', parsed.access_token)
+    SessionStorage.set('refreshToken', parsed.refresh_token)
+
+    return parsed
 }
