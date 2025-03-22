@@ -213,6 +213,18 @@
 				"parameters": []
 			}
 		},
+		"/auth/spotify/refresh": {
+			"post": {
+				"operationId": "RefreshAccessToken",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
 		"/auth/spotify": {
 			"get": {
 				"operationId": "AuthSpotify",
