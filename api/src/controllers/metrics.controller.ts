@@ -1,7 +1,7 @@
 import { Controller, Route, Get, OperationId, Middlewares } from 'tsoa'
 import { buildAuthMiddleware } from '../middlewares'
-import { SpotifyService } from '../services'
-import { APISpotifyDetails } from '../models'
+import { SpotifyService, YoutubeService } from '../services'
+import { APISpotifyDetails, APIYoutubeDetails } from '../models'
 
 @Route('/metrics')
 export class MetricsController extends Controller {
@@ -14,6 +14,25 @@ export class MetricsController extends Controller {
             await SpotifyService.fetchTopTracks(),
             await SpotifyService.fetchTopGenres(),
             await SpotifyService.fetchTopArtists()
+        ])
+
+        return {
+            profile: profile,
+            tracks: tracks,
+            genres: genres,
+            artists: artists
+        }
+    }
+
+    @Get('/youtube')
+    @OperationId('Get Youtube music Analytical Data')
+    @Middlewares(buildAuthMiddleware('youtube'))
+    public async youtubeDetails(): Promise<APIYoutubeDetails> {
+        const [profile, tracks, genres, artists] = await Promise.all([
+            await YoutubeService.fetchProfile(),
+            await YoutubeService.fetchTopTracks(),
+            await YoutubeService.fetchTopGenres(),
+            await YoutubeService.fetchTopArtists()
         ])
 
         return {
