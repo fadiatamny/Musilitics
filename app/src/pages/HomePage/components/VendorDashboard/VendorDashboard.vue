@@ -1,18 +1,28 @@
 <template>
     <div
-        v-if="!loading"
-        class="dashboard-container"
+        v-if="!loading && !error"
+        style="min-width: 70%; max-width: 70%; width: 100%"
         :style="hidden ? `disaply: none` : ''"
     >
-        <UserProfile :profile="profileData" @logout="handleLogout" />
-        <q-separator inset />
-        <TracksTable :tracks="[]" />
-        <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 20px">
-            <ArtistsTable :artists="[]" />
-            <GenresTable :genres="[]" />
+        <div class="dashboard-container">
+            <UserProfile :profile="profileData" @logout="handleLogout" />
+            <q-separator inset />
+            <TracksTable :tracks="tracksData" />
+            <q-separator inset />
+            <div
+                style="
+                    display: grid;
+                    grid-template-columns: 3fr 1fr;
+                    gap: 20px;
+                    height: 20%;
+                "
+            >
+                <ArtistsTable :artists="artistsData" />
+                <GenresTable :genres="genresData" />
+            </div>
         </div>
     </div>
-    <SkeletonDashboard v-else />
+    <SkeletonDashboard v-else @logout="handleLogout" :isError="!!error" />
 </template>
 
 <script lang="ts">
@@ -29,6 +39,12 @@ import {
 import { deleteCookie, fetchSpottifyData } from '@/utils'
 import { toRefs } from 'vue'
 import { useRouter } from 'vue-router'
+import type {
+    SpotifyTrack,
+    SpotifyProfile,
+    SpotifyArtist,
+    SpotifyGenre
+} from '@/types'
 
 export default defineComponent({
     name: 'VendorDashboard',
@@ -57,7 +73,11 @@ export default defineComponent({
         const { vendor } = toRefs(props)
         const router = useRouter()
 
-        const profileData = ref<{ name: string; image: string } | null>(null)
+        const profileData = ref<SpotifyProfile | null>(null)
+        const tracksData = ref<SpotifyTrack[]>([])
+        const artistsData = ref<SpotifyArtist[]>([])
+        const genresData = ref<SpotifyGenre[]>([])
+        const error = ref<unknown | null>(null)
         const loading = ref(true)
 
         const handleLogout = () => {
@@ -70,16 +90,28 @@ export default defineComponent({
         }
 
         onMounted(async () => {
-            const { profile } = await fetchSpottifyData()
+            try {
+                const { profile, tracks, artists, genres } =
+                    await fetchSpottifyData()
 
-            profileData.value = profile
-            loading.value = false
+                profileData.value = profile
+                tracksData.value = tracks
+                artistsData.value = artists
+                genresData.value = genres
+                loading.value = false
+            } catch (e) {
+                error.value = e
+            }
         })
 
         return {
-            profileData,
             loading,
-            handleLogout
+            error,
+            handleLogout,
+            profileData,
+            tracksData,
+            artistsData,
+            genresData
         }
     }
 })
@@ -91,6 +123,7 @@ export default defineComponent({
     grid-template-rows: auto auto 1fr;
     gap: 20px;
     padding: 20px;
+    width: 100%;
 
     border: 2px solid var(--neon-button-color, #1db954);
     box-shadow: 0 0 5vw rgba(180, 180, 255, 0.3);
