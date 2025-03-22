@@ -1,1 +1,2 @@
-export * from './VendorDashboard'
+export * from './SpotifyVendorDashboard'
+export * from './YoutubeVendorDashboard'
