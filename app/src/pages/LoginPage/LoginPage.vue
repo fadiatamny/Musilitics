@@ -39,8 +39,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, nextTick, onBeforeUnmount, onMounted } from 'vue'
 import { YoutubeLogin, SpotifyLogin } from './components'
+import router from '@/routes'
+import { handleLoginEvent } from '@/utils'
 
 export default defineComponent({
     name: 'LoginPage',
@@ -48,7 +50,23 @@ export default defineComponent({
         SpotifyLogin,
         YoutubeLogin
     },
-    setup() {}
+    setup() {
+        const handleAuthMessage = (event: MessageEvent) => {
+            if (handleLoginEvent(event)) {
+                nextTick(() => {
+                    router.push({ name: 'Home' })
+                })
+            }
+        }
+
+        onMounted(() => {
+            window.addEventListener('message', handleAuthMessage)
+        })
+
+        onBeforeUnmount(() => {
+            window.removeEventListener('message', handleAuthMessage)
+        })
+    }
 })
 </script>
 
