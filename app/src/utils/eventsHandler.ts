@@ -6,10 +6,7 @@ type EventData = {
     [key: string]: any
 }
 
-export const handleLoginEvent = (
-    source: 'youtube' | 'spotify',
-    event: MessageEvent<EventData>
-) => {
+export const handleLoginEvent = (event: MessageEvent<EventData>) => {
     if (event.origin !== import.meta.env.VITE_BACKEND_URI) {
         console.warn('Received message from untrusted origin:', event.origin)
         return
@@ -24,9 +21,23 @@ export const handleLoginEvent = (
         return
     }
 
-    const cookieName = config[source].cookieName
-    const { [cookieName]: cookieData } = event.data ?? {}
-    document.cookie = `${cookieName}=${cookieData!}; Path=/; Secure; SameSite=Strict`
+    const {
+        [config.spotify.cookieName]: spotifyCookieData,
+        [config.youtube.cookieName]: youtubeCookieData
+    } = event.data ?? {}
+
+    if (!spotifyCookieData && !youtubeCookieData) {
+        console.error('No cookies received.')
+        return
+    }
+
+    if (spotifyCookieData) {
+        document.cookie = `${config.spotify.cookieName}=${spotifyCookieData}; Path=/; Secure; SameSite=Strict`
+    }
+
+    if (youtubeCookieData) {
+        document.cookie = `${config.youtube.cookieName}=${youtubeCookieData}; Path=/; Secure; SameSite=Strict`
+    }
 
     return 'success'
 }
