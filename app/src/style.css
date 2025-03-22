@@ -19,6 +19,7 @@
     --login-card-background: rgba(244, 241, 255, 0.56);
     --login-card-shadow: rgba(72, 72, 216, 0.55);
     --login-card-border: rgba(0, 0, 0, 0.6);
+    --overlay-background: rgba(64, 64, 64, 0.1);
 }
 
 body.body--dark {
@@ -32,6 +33,7 @@ body.body--dark {
     --login-card-background: rgba(37, 39, 48, 1);
     --login-card-shadow: rgba(180, 180, 255, 0.3);
     --login-card-border: rgba(255, 255, 255, 0.6);
+    --overlay-background: rgba(224, 224, 224, 0.1);
 }
 
 .text-glow {
