@@ -46,7 +46,7 @@ export default defineComponent({
         const { profile } = toRefs(props)
 
         const profileImage = computed(
-            () => profile.value?.image ?? '/default-profile.svg'
+            () => profile.value?.image ?? '@/assets/default-profile.svg'
         )
 
         const profileName = computed(() => profile.value?.name ?? 'Guest')
