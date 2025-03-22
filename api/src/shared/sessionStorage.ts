@@ -1,6 +1,6 @@
 import { AsyncLocalStorage } from 'async_hooks'
 
-type KnownKeys = 'accessToken' | 'token'
+type KnownKeys = 'accessToken' | 'token' | 'refreshToken'
 type FlexibleKey = KnownKeys | (string & {})
 
 export class SessionStorage {
