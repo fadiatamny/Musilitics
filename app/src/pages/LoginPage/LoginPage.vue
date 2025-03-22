@@ -23,7 +23,7 @@
                 >
                     <div class="text-h5">
                         Welcome to
-                        <span class="text-glow">Musilitics</span>!
+                        <span class="text-glow text-h5">Musilitics</span>!
                     </div>
                     <div class="text-subtitle1">
                         Sign in to start deep dive into your favorite music.
@@ -32,7 +32,7 @@
             </div>
             <div class="row" style="flex-direction: column; gap: 16px">
                 <SpotifyLogin />
-                <YoutubeLogin />
+                <!-- <YoutubeLogin /> -->
             </div>
         </div>
     </div>
@@ -41,13 +41,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import SpotifyLogin from './components/SpotifyLogin.vue'
-import YoutubeLogin from './components/YoutubeLogin.vue'
+// import YoutubeLogin from './components/YoutubeLogin.vue'
 
 export default defineComponent({
     name: 'LoginPage',
     components: {
         SpotifyLogin,
-        YoutubeLogin
+        // YoutubeLogin
     },
     setup() {}
 })

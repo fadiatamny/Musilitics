@@ -10,19 +10,14 @@
     >
         <div class="container">
             <VendorDashboard
+                v-for="(vendor, index) of vendors"
+                :key="index"
                 class="item"
-                vendor="spotify"
-                :class="isExpanded('spotify') ? 'expanded' : ''"
-                :hidden="expanded !== '' && !isExpanded('spotify')"
-                @expand="expanded = 'spotify'"
+                :vendor="vendor"
+                :class="isExpanded(vendor) ? 'expanded' : ''"
+                :hidden="expanded !== '' && !isExpanded(vendor)"
+                @expand="expanded = vendor"
             />
-            <!-- <VendorDashboard
-                class="item"
-                vendor="youtube"
-                :class="isExpanded('youtube') ? 'expanded' : ''"
-                :hidden="expanded !== '' && !isExpanded('youtube')"
-                @expand="expanded = 'youtube'"
-            /> -->
         </div>
     </div>
 </template>
@@ -30,6 +25,8 @@
 <script lang="ts">
 import { ref } from 'vue'
 import { VendorDashboard } from './components'
+import { cookieExists } from '@/utils'
+import { config } from '@/config'
 
 export default {
     name: 'LoginPage',
@@ -38,6 +35,15 @@ export default {
     },
     setup() {
         const expanded = ref('')
+        const vendors: string[] = []
+
+        if (cookieExists(config.spotify.cookieName)) {
+            vendors.push('spotify')
+        }
+
+        if (cookieExists(config.youtube.cookieName)) {
+            vendors.push('youtube')
+        }
 
         const isExpanded = (id: string) => {
             return expanded.value === id
@@ -45,7 +51,8 @@ export default {
 
         return {
             expanded,
-            isExpanded
+            isExpanded,
+            vendors
         }
     }
 }
@@ -53,23 +60,17 @@ export default {
 
 <style scoped lang="scss">
 .container {
-    width: 90%;
+    padding: 5vh 5vw;
+    height: 100%;
+    width: 100%;
     display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(2, 1fr);
+    gap: 5rem;
+    place-items: center;
 
     .item {
         transition: all 0.3s ease;
-
-        &.expanded,
-        &:only-child {
-            grid-column: 1 / -1;
-        }
     }
 
-    &:has(.item.expanded),
-    &:has(.item:only-child) {
-        grid-template-columns: 1fr;
-    }
+    overflow: scroll;
 }
 </style>

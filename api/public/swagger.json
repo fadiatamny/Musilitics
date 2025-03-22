@@ -24,23 +24,136 @@
 				"type": "object",
 				"additionalProperties": true
 			},
+			"SpotifyTrack": {
+				"properties": {
+					"rank": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					},
+					"link": {
+						"type": "string"
+					},
+					"popularity": {
+						"type": "number",
+						"format": "double"
+					},
+					"album": {
+						"properties": {
+							"image": {
+								"type": "string"
+							},
+							"link": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"image",
+							"link",
+							"name"
+						],
+						"type": "object"
+					},
+					"artist": {
+						"properties": {
+							"link": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"link",
+							"name"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"rank",
+					"name",
+					"link",
+					"popularity",
+					"album",
+					"artist"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"SpotifyGenre": {
+				"properties": {
+					"genre": {
+						"type": "string"
+					},
+					"rank": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"genre",
+					"rank"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"SpotifyArtist": {
+				"properties": {
+					"rank": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					},
+					"link": {
+						"type": "string"
+					},
+					"popularity": {
+						"type": "number",
+						"format": "double"
+					},
+					"image": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"rank",
+					"name",
+					"link",
+					"popularity",
+					"image"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
 			"APISpotifyDetails": {
 				"properties": {
 					"profile": {
 						"$ref": "#/components/schemas/SpotifyProfile"
 					},
 					"tracks": {
-						"items": {},
+						"items": {
+							"$ref": "#/components/schemas/SpotifyTrack"
+						},
 						"type": "array"
 					},
 					"genres": {
 						"items": {
-							"type": "string"
+							"$ref": "#/components/schemas/SpotifyGenre"
 						},
 						"type": "array"
 					},
 					"artists": {
-						"items": {},
+						"items": {
+							"$ref": "#/components/schemas/SpotifyArtist"
+						},
 						"type": "array"
 					}
 				},

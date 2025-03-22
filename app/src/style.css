@@ -1,3 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    font-family: 'Roboto', sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-variation-settings: 'wdth' 100;
+    font-size: 15px;
+}
+
 :root {
     --text-color: #404040;
     --subtext-color: #606060;
@@ -5,6 +15,7 @@
     --panel-background: #f5f7fa;
     --neon-highlight: rgba(0, 0, 0, 0.2);
     --card-background: rgba(244, 241, 255, 0.56);
+    --profile-background: rgba(0, 0, 0, 0.1);
 }
 
 body.body--dark {
@@ -14,9 +25,16 @@ body.body--dark {
     --panel-background: #252730;
     --neon-highlight: rgba(255, 255, 255, 0.8);
     --card-background: rgba(37, 39, 48, 1);
+    --profile-background: rgba(255, 255, 255, 0.8);
 }
 
 .text-glow {
+    color: var(--text-color);
+    text-shadow: 0px 0px 8px var(--neon-highlight);
+}
+
+.clickable:hover {
+    cursor: pointer;
     color: var(--text-color);
     text-shadow: 0px 0px 8px var(--neon-highlight);
 }

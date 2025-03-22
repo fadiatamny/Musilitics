@@ -1,7 +1,11 @@
 <template>
     <div class="dashboard-container">
         <div
-            style="display: flex; justify-content: space-between; align-items: center;"
+            style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            "
         >
             <div
                 style="
@@ -15,7 +19,10 @@
                 <q-skeleton type="text" width="200px" height="50px" />
             </div>
 
-            <q-skeleton type="QBtn" />
+            <QBtn v-if="isError" flat @click="$emit('logout')">
+                <QIcon name="close" color="red" />
+            </QBtn>
+            <q-skeleton v-else type="QBtn" />
         </div>
         <q-separator inset />
         <q-skeleton height="200px" square />
@@ -28,12 +35,20 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { QSkeleton } from 'quasar'
+import { QSkeleton, QBtn, QIcon } from 'quasar'
 
 export default defineComponent({
     name: 'SkeletonDashboard',
     components: {
-        QSkeleton
+        QSkeleton,
+        QBtn,
+        QIcon
+    },
+    props: {
+        isError: {
+            type: Boolean,
+            default: false
+        }
     },
     setup() {}
 })

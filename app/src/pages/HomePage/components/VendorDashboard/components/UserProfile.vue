@@ -9,12 +9,13 @@
         <div class="profile-wrapper">
             <QAvatar>
                 <img
-                    :src="profile?.image"
+                    :src="profileImage"
                     alt="Profile Image"
                     class="profile-image"
+                    style="background: var(--profile-background)"
                 />
             </QAvatar>
-            <span class="profile-name text-glow">{{ profile?.name }}</span>
+            <span class="profile-name text-glow">{{ profileName }}</span>
         </div>
         <QBtn flat @click="$emit('logout')">
             <QIcon name="close" color="red" />
@@ -23,16 +24,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue'
+import { defineComponent, type PropType, computed } from 'vue'
 import { QAvatar, QIcon, QBtn } from 'quasar'
+import type { SpotifyProfile } from '@/types'
+import { toRefs } from 'vue'
 
 export default defineComponent({
+    name: 'UserProfile',
     props: {
         profile: {
-            type: Object as PropType<{
-                name: string
-                image: string
-            } | null>,
+            type: Object as PropType<SpotifyProfile | null>,
             required: true
         }
     },
@@ -41,7 +42,19 @@ export default defineComponent({
         QIcon,
         QBtn
     },
-    setup() {
+    setup(props: { profile: SpotifyProfile | null }) {
+        const { profile } = toRefs(props)
+
+        const profileImage = computed(
+            () => profile.value?.image ?? '/default-profile.svg'
+        )
+
+        const profileName = computed(() => profile.value?.name ?? 'Guest')
+
+        return {
+            profileImage,
+            profileName
+        }
     }
 })
 </script>
