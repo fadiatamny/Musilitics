@@ -9,8 +9,9 @@
         "
     >
         <div class="container">
-            <VendorDashboard
+            <component
                 v-for="(vendor, index) of vendors"
+                :is="getVendorComponent(vendor)"
                 :key="index"
                 class="item"
                 :vendor="vendor"
@@ -24,14 +25,15 @@
 
 <script lang="ts">
 import { ref } from 'vue'
-import { VendorDashboard } from './components'
+import { YoutubeVendorDashboard, SpotifyVendorDashboard } from './components'
 import { cookieExists } from '@/utils'
 import { config } from '@/config'
 
 export default {
     name: 'LoginPage',
     components: {
-        VendorDashboard
+        YoutubeVendorDashboard,
+        SpotifyVendorDashboard
     },
     setup() {
         const expanded = ref('')
@@ -49,10 +51,22 @@ export default {
             return expanded.value === id
         }
 
+        const getVendorComponent = (vendor: string) => {
+            switch (vendor) {
+                case 'youtube':
+                    return YoutubeVendorDashboard
+                case 'spotify':
+                    return SpotifyVendorDashboard
+                default:
+                    return null
+            }
+        }
+
         return {
             expanded,
             isExpanded,
-            vendors
+            vendors,
+            getVendorComponent
         }
     }
 }
