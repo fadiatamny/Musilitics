@@ -1,6 +1,6 @@
 import { apiClient } from "./requestClient"
 
-export const fetchSpottifyData = async () => {
+export const fetchSpotifyData = async () => {
     try {
         const response = await apiClient.get('/metrics/spotify')
         return response.data

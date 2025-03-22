@@ -1,7 +1,7 @@
 import { Controller, Route, Get, OperationId, Middlewares } from 'tsoa'
 import { buildAuthMiddleware } from '../middlewares'
 import { SpotifyService } from '../services'
-import { APISpotifyDetails } from '../models/api/spottify.model'
+import { APISpotifyDetails } from '../models'
 
 @Route('/metrics')
 export class MetricsController extends Controller {

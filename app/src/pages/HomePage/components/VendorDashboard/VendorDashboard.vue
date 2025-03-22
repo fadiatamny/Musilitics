@@ -41,7 +41,7 @@ import {
     SkeletonDashboard
 } from './components'
 
-import { deleteCookie, fetchSpottifyData } from '@/utils'
+import { deleteCookie, fetchSpotifyData, fetchYoutubeData } from '@/utils'
 import { toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 import type {
@@ -95,9 +95,11 @@ export default defineComponent({
         }
 
         onMounted(async () => {
+            const dataFetcher = vendor.value === 'spotify' ? fetchSpotifyData : fetchYoutubeData
+
             try {
                 const { profile, tracks, artists, genres } =
-                    await fetchSpottifyData()
+                    await dataFetcher()
 
                 profileData.value = profile
                 tracksData.value = tracks
