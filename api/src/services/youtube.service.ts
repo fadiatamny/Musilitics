@@ -76,7 +76,6 @@ export class YoutubeService {
         }
     }
 
-
     public static async fetchTopTracks(): Promise<YoutubeTrack[]> {
         const accessToken = SessionStorage.get<string>('accessToken')
         this.oauth2Client.setCredentials({ access_token: accessToken })
@@ -94,7 +93,7 @@ export class YoutubeService {
 
         return (
             items?.map((item) => ({
-                rank: item.snippet!.position!,
+                rank: item.snippet!.position! + 1,
                 name: item.snippet!.title!,
                 link: `https://www.youtube.com/watch?v=${item.contentDetails!.videoId}`,
                 image: item.snippet!.thumbnails!.high!.url ?? null
@@ -163,7 +162,7 @@ export class YoutubeService {
     }
 
     public static async fetchTopGenres(): Promise<YoutubeGenre[]> {
-      return [];
+        return []
     }
 
     //#endregion Operations
