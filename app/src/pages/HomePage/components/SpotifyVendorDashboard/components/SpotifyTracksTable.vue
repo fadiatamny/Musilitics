@@ -6,7 +6,7 @@
             :rows="tracks"
             :columns="columns"
             row-key="rank"
-            style="height: 340px;"
+            style="height: 340px"
         >
             <template #name="{ row }">
                 <div
@@ -36,18 +36,16 @@
                     style="gap: 10px"
                     @click="openTab(row.album.link)"
                 >
-                    <QAvatar>
-                        <img
-                            :src="row.album.image ?? '/default-album-cover.jpg'"
-                            width="32px"
-                            height="32px"
-                            style="
-                                border-radius: 50%;
-                                background: var(--profile-background);
-                            "
-                            alt="Profile Image"
-                        />
-                    </QAvatar>
+                    <img
+                        :src="row.album.image ?? '/default-album-cover.jpg'"
+                        width="32px"
+                        height="32px"
+                        style="
+                            border-radius: 50%;
+                            background: var(--profile-background);
+                        "
+                        alt="Profile Image"
+                    />
                     <p
                         style="
                             margin: 0;

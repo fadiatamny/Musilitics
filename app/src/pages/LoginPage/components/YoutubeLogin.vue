@@ -7,6 +7,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { NeonButton } from '@/components'
+import { loginWithYoutube } from '@/utils/youtubeUtils'
 
 export default defineComponent({
     name: 'YoutubeLogin',
@@ -14,11 +15,6 @@ export default defineComponent({
         NeonButton
     },
     setup() {
-        const loginWithYoutube = () => {
-            const authUrl = `${import.meta.env.VITE_BACKEND_URI}/api/auth/youtube`
-            window.open(authUrl, '_blank', 'width=500,height=600')
-        }
-
         return {
             loginWithYoutube
         }

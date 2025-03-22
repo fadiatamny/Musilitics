@@ -45,37 +45,33 @@
                     style="gap: 10px"
                     @click="openTab(row.artist.link)"
                 >
-                    <QAvatar>
-                        <img
-                            src="@/assets/default-profile.svg"
-                            width="32"
-                            height="32"
-                            style="
-                                border-radius: 50%;
-                                background: var(--profile-background);
-                                position: absolute;
-                                top: 6px;
-                                left: 6px;
-                            "
-                            alt="Default Cover"
-                        />
-                        <img
-                            :src="row.artist.image"
-                            @error="
-                                (e: any) => (e.target.style.display = 'none')
-                            "
-                            width="32"
-                            height="32"
-                            style="
-                                border-radius: 50%;
-                                background: var(--profile-background);
-                                position: absolute;
-                                top: 6px;
-                                left: 6px;
-                            "
-                            alt="Profile Image"
-                        />
-                    </QAvatar>
+                    <img
+                        src="@/assets/default-profile.svg"
+                        width="32"
+                        height="32"
+                        style="
+                            border-radius: 50%;
+                            background: var(--profile-background);
+                            position: absolute;
+                            top: 6px;
+                            left: 6px;
+                        "
+                        alt="Default Cover"
+                    />
+                    <img
+                        :src="row.artist.image"
+                        @error="(e: any) => (e.target.style.display = 'none')"
+                        width="32"
+                        height="32"
+                        style="
+                            border-radius: 50%;
+                            background: var(--profile-background);
+                            position: absolute;
+                            top: 6px;
+                            left: 6px;
+                        "
+                        alt="Profile Image"
+                    />
                     <p style="margin: 0; margin-left: 32px">
                         {{ row.artist.name }}
                     </p>

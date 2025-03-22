@@ -5,10 +5,7 @@
         :style="computedStyles"
     >
         <div class="dashboard-container">
-            <SpotifyUserProfile
-                :profile="profileData"
-                @logout="handleLogout"
-            />
+            <SpotifyUserProfile :profile="profileData" @logout="handleLogout" />
             <q-separator inset />
             <SpotifyTracksTable :tracks="tracksData" />
             <q-separator inset />
@@ -86,13 +83,13 @@ export default defineComponent({
         const loading = ref(true)
 
         const computedStyles = computed(() => ({
-            display: hidden.value ? 'none' : 'block',
+            display: hidden.value ? 'none' : 'block'
         }))
 
         const handleLogout = () => {
             deleteCookie(config.spotify.cookieName)
 
-            router.push({ name: 'Login' })
+            router.push({ name: 'Home', force: true, replace: true })
         }
 
         onMounted(async () => {
@@ -132,7 +129,7 @@ export default defineComponent({
     padding: 20px;
     width: 100%;
 
-    border: 2px solid #1DB954;
+    border: 2px solid #1db954;
     box-shadow: 0 0 5vw rgba(180, 180, 255, 0.3);
     backdrop-filter: blur(1vw) saturate(1.8);
     -webkit-backdrop-filter: blur(1vw) saturate(1.8);

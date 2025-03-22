@@ -89,7 +89,7 @@ export default defineComponent({
         const handleLogout = () => {
             deleteCookie(config.youtube.cookieName)
 
-            router.push({ name: 'Login' })
+            router.push({ name: 'Home', force: true, replace: true })
         }
 
         onMounted(async () => {

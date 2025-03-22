@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref, watch, onBeforeUnmount } from 'vue'
 import { YoutubeVendorDashboard, SpotifyVendorDashboard } from './components'
 import { cookieExists } from '@/utils'
 import { config } from '@/config'
@@ -37,15 +37,25 @@ export default {
     },
     setup() {
         const expanded = ref('')
-        const vendors: string[] = []
+        const vendors = ref<string[]>([])
+        const cookieSnapshot = ref(document.cookie)
 
-        if (cookieExists(config.spotify.cookieName)) {
-            vendors.push('spotify')
-        }
+        watch(
+            cookieSnapshot,
+            () => {
+                const newVendors = []
 
-        if (cookieExists(config.youtube.cookieName)) {
-            vendors.push('youtube')
-        }
+                if (cookieExists(config.spotify.cookieName)) {
+                    newVendors.push('spotify')
+                }
+                if (cookieExists(config.youtube.cookieName)) {
+                    newVendors.push('youtube')
+                }
+
+                vendors.value = newVendors
+            },
+            { immediate: true }
+        )
 
         const isExpanded = (id: string) => {
             return expanded.value === id
@@ -61,6 +71,23 @@ export default {
                     return null
             }
         }
+
+        const intervalId = ref<ReturnType<typeof setInterval> | null>(null)
+
+        onMounted(() => {
+            intervalId.value = setInterval(() => {
+                const currentCookie = document.cookie
+                if (cookieSnapshot.value !== currentCookie) {
+                    cookieSnapshot.value = currentCookie
+                }
+            }, 300)
+        })
+
+        onBeforeUnmount(() => {
+            if (intervalId.value) {
+                clearInterval(intervalId.value)
+            }
+        })
 
         return {
             expanded,
