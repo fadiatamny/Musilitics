@@ -64,8 +64,6 @@ export class SpotifyService {
     public static async refreshAccessToken(): Promise<Record<string, any>> {
         const refreshToken = SessionStorage.get<string>('refreshToken')
 
-        console.log(refreshToken)
-
         const response = await axios.post(
             'https://accounts.spotify.com/api/token',
             querystring.stringify({
