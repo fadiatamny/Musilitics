@@ -27,13 +27,47 @@ const models: TsoaRoute.Models = {
         "additionalProperties": true,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SpotifyTrack": {
+        "dataType": "refObject",
+        "properties": {
+            "rank": {"dataType":"double","required":true},
+            "name": {"dataType":"string","required":true},
+            "link": {"dataType":"string","required":true},
+            "popularity": {"dataType":"double","required":true},
+            "album": {"dataType":"nestedObjectLiteral","nestedProperties":{"image":{"dataType":"string","required":true},"link":{"dataType":"string","required":true},"name":{"dataType":"string","required":true}},"required":true},
+            "artist": {"dataType":"nestedObjectLiteral","nestedProperties":{"link":{"dataType":"string","required":true},"name":{"dataType":"string","required":true}},"required":true},
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SpotifyGenre": {
+        "dataType": "refObject",
+        "properties": {
+            "genre": {"dataType":"string","required":true},
+            "rank": {"dataType":"double","required":true},
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SpotifyArtist": {
+        "dataType": "refObject",
+        "properties": {
+            "rank": {"dataType":"double","required":true},
+            "name": {"dataType":"string","required":true},
+            "link": {"dataType":"string","required":true},
+            "popularity": {"dataType":"double","required":true},
+            "image": {"dataType":"string","required":true},
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "APISpotifyDetails": {
         "dataType": "refObject",
         "properties": {
             "profile": {"ref":"SpotifyProfile","required":true},
-            "tracks": {"dataType":"array","array":{"dataType":"any"},"required":true},
-            "genres": {"dataType":"array","array":{"dataType":"string"},"required":true},
-            "artists": {"dataType":"array","array":{"dataType":"any"},"required":true},
+            "tracks": {"dataType":"array","array":{"dataType":"refObject","ref":"SpotifyTrack"},"required":true},
+            "genres": {"dataType":"array","array":{"dataType":"refObject","ref":"SpotifyGenre"},"required":true},
+            "artists": {"dataType":"array","array":{"dataType":"refObject","ref":"SpotifyArtist"},"required":true},
         },
         "additionalProperties": true,
     },
