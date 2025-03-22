@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h5 style="margin: 0; margin-bottom: 10px">Top Tracks</h5>
+        <h5 style="margin: 0; margin-bottom: 10px">Top Videos</h5>
 
         <MTable
             :rows="tracks"
@@ -38,6 +38,37 @@
                     </p>
                 </div>
             </template>
+
+            <template #artist="{ row }">
+                <div
+                    class="flex items-center clickable full-width"
+                    style="gap: 10px"
+                    @click="openTab(row.artist.link)"
+                >
+                    <QAvatar>
+                        <img
+                            :src="row.artist.image ?? '/default-album-cover.jpg'"
+                            width="32px"
+                            height="32px"
+                            style="
+                                border-radius: 50%;
+                                background: var(--profile-background);
+                            "
+                            alt="Profile Image"
+                        />
+                    </QAvatar>
+                    <p
+                        style="
+                            margin: 0;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                            width: calc(100% - 50px);
+                        "
+                    >
+                        {{ row.artist.name }}
+                    </p>
+                </div>
+            </template>
         </MTable>
     </div>
 </template>
@@ -72,7 +103,14 @@ export default defineComponent({
             {
                 name: 'name',
                 field: 'name',
-                label: 'Name',
+                label: 'Video',
+                align: 'left',
+                sortable: true
+            },
+            {
+                name: 'artist',
+                field: 'artist',
+                label: 'Channel',
                 align: 'left',
                 sortable: true
             },

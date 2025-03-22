@@ -88,6 +88,7 @@ const models: TsoaRoute.Models = {
             "name": {"dataType":"string","required":true},
             "link": {"dataType":"string","required":true},
             "image": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "artist": {"dataType":"nestedObjectLiteral","nestedProperties":{"link":{"dataType":"string","required":true},"image":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"name":{"dataType":"string","required":true}},"required":true},
         },
         "additionalProperties": true,
     },

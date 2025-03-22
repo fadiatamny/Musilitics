@@ -200,13 +200,34 @@
 					"image": {
 						"type": "string",
 						"nullable": true
+					},
+					"artist": {
+						"properties": {
+							"link": {
+								"type": "string"
+							},
+							"image": {
+								"type": "string",
+								"nullable": true
+							},
+							"name": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"link",
+							"image",
+							"name"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
 					"rank",
 					"name",
 					"link",
-					"image"
+					"image",
+					"artist"
 				],
 				"type": "object",
 				"additionalProperties": true

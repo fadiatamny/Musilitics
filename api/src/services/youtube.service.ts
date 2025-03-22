@@ -76,6 +76,16 @@ export class YoutubeService {
         }
     }
 
+    private static getCleanTrackName(title: string): string {
+        const match = title.match(/^(.+?)\s*[-–:]\s*(.+)$/)
+
+        if (match) {
+            return match[2].trim()
+        }
+
+        return title.trim()
+    }
+
     public static async fetchTopTracks(): Promise<YoutubeTrack[]> {
         const accessToken = SessionStorage.get<string>('accessToken')
         this.oauth2Client.setCredentials({ access_token: accessToken })
@@ -90,15 +100,34 @@ export class YoutubeService {
         })
 
         const items = response.data.items ?? []
+        const tracks: YoutubeTrack[] = []
 
-        return (
-            items?.map((item) => ({
+        for (const item of items) {
+            const trackName = this.getCleanTrackName(item.snippet!.title!)
+
+            const channelId: string = item.snippet!.videoOwnerChannelId!
+            const channelResponse = await youtube.channels.list({
+                auth: this.oauth2Client,
+                id: [channelId],
+                part: ['snippet']
+            })
+
+            const channel = channelResponse.data.items![0].snippet!
+
+            tracks.push({
                 rank: item.snippet!.position! + 1,
-                name: item.snippet!.title!,
+                name: trackName,
+                artist: {
+                    name: channel.title!,
+                    image: channel.thumbnails!.high!.url ?? null,
+                    link: `https://www.youtube.com/channel/${channelId}`
+                },
                 link: `https://www.youtube.com/watch?v=${item.contentDetails!.videoId}`,
                 image: item.snippet!.thumbnails!.high!.url ?? null
-            })) ?? []
-        )
+            })
+        }
+
+        return tracks
     }
 
     public static async fetchTopArtists(): Promise<YoutubeArtist[]> {
