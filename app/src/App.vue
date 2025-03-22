@@ -31,6 +31,15 @@
                         />
                     </div>
 
+                    <q-separator
+                        vertical
+                        v-if="
+                            isHome &&
+                            (isNotLoggedIn('youtube') ||
+                                isNotLoggedIn('spotify'))
+                        "
+                        style="margin: 0 15px"
+                    />
                     <q-btn
                         class="text-glow"
                         dense
