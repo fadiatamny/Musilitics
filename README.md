@@ -3,16 +3,31 @@
 A better way to see your music habits and trends clearly
 
 ### Supported Music Platforms
-- [X] [Spotify](https://www.spotify.com/)
-- [ ] [Youtube Music](https://music.youtube.com/)
 
-----
+- [x] [Spotify](https://www.spotify.com/)
+- [x] [Youtube Music](https://music.youtube.com/)
+
+---
+
+## Features
+
+View your music habits and trends
+
+Spotify:
+
+- [x] View top 10 songs
+- [x] View top 10 artists
+- [x] View top 10 genres
+
+Youtube Music:
+
+- [x] View top 10 recently liked songs
+- [x] View top 10 recently listened songs artists
+
+---
+
 ## Roadmap
 
-- [x] View your music habits and trends
-  - [x] View top 10 songs
-  - [x] View top 10 artists
-  - [x] View top 10 genres
 - [ ] Mailing service
   - [ ] Send monthly summary of music flavour and habbits with recommendations for what to listen to next
 - [ ] Sync music playlists across platforms
