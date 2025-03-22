@@ -14,7 +14,7 @@
                     "
                 >
                     <q-avatar size="64px">
-                        <img src="../../assets/logo-box.png" />
+                        <img src="@/assets/logo-box.png" />
                     </q-avatar>
                 </div>
                 <div
@@ -32,24 +32,41 @@
             </div>
             <div class="row" style="flex-direction: column; gap: 16px">
                 <SpotifyLogin />
-                <!-- <YoutubeLogin /> -->
+                <YoutubeLogin />
             </div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-import SpotifyLogin from './components/SpotifyLogin.vue'
-// import YoutubeLogin from './components/YoutubeLogin.vue'
+import { defineComponent, nextTick, onBeforeUnmount, onMounted } from 'vue'
+import { YoutubeLogin, SpotifyLogin } from './components'
+import router from '@/routes'
+import { handleLoginEvent } from '@/utils'
 
 export default defineComponent({
     name: 'LoginPage',
     components: {
         SpotifyLogin,
-        // YoutubeLogin
+        YoutubeLogin
     },
-    setup() {}
+    setup() {
+        const handleAuthMessage = (event: MessageEvent) => {
+            if (handleLoginEvent(event)) {
+                nextTick(() => {
+                    router.push({ name: 'Home' })
+                })
+            }
+        }
+
+        onMounted(() => {
+            window.addEventListener('message', handleAuthMessage)
+        })
+
+        onBeforeUnmount(() => {
+            window.removeEventListener('message', handleAuthMessage)
+        })
+    }
 })
 </script>
 
@@ -66,11 +83,11 @@ export default defineComponent({
     flex-direction: column;
     gap: 5vh;
     padding: 5vw;
-    background: rgba(37, 39, 48, 1);
-    box-shadow: 0 0 5vw rgba(180, 180, 255, 0.3);
+    background: var(--login-card-background);
+    box-shadow: 0 0 5vw var(--login-card-shadow);
     backdrop-filter: blur(1vw) saturate(1.8);
     -webkit-backdrop-filter: blur(1vw) saturate(1.8);
     border-radius: 20px;
-    border: 2px solid rgba(255, 255, 255, 0.6);
+    border: 2px solid var(--login-card-border);
 }
 </style>

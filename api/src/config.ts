@@ -8,6 +8,9 @@ export const config = {
         cookieName: process.env.SPOTIFY_COOKIE_NAME || 'spotify-auth'
     },
     youtube: {
+        clientId: requiredEnv('GOOGLE_CLIENT_ID'),
+        clientSecret: requiredEnv('GOOGLE_CLIENT_SECRET'),
+        redirectUri: requiredEnv('GOOGLE_REDIRECT_URI'),
         cookieName: process.env.YOUTUBE_COOKIE_NAME || 'youtube-auth'
     },
     allowedOrigins: getAllowedOrigins(),

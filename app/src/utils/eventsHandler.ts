@@ -2,7 +2,7 @@ import { config } from '@/config'
 
 type EventData = {
     status: string
-    type: 'login' | 'refresh'
+    type: string
     [key: string]: any
 }
 
@@ -21,10 +21,23 @@ export const handleLoginEvent = (event: MessageEvent<EventData>) => {
         return
     }
 
-    const { [config.spotify.cookieName]: cookieData } = event.data ?? {}
+    const {
+        [config.spotify.cookieName]: spotifyCookieData,
+        [config.youtube.cookieName]: youtubeCookieData
+    } = event.data ?? {}
 
-    document.cookie = `${config.spotify.cookieName}=${cookieData!}; Path=/; Secure; SameSite=Strict`
+    if (!spotifyCookieData && !youtubeCookieData) {
+        console.error('No cookies received.')
+        return
+    }
 
+    if (spotifyCookieData) {
+        document.cookie = `${config.spotify.cookieName}=${spotifyCookieData}; Path=/; Secure; SameSite=Strict`
+    }
+
+    if (youtubeCookieData) {
+        document.cookie = `${config.youtube.cookieName}=${youtubeCookieData}; Path=/; Secure; SameSite=Strict`
+    }
 
     return 'success'
 }

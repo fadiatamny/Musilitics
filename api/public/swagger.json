@@ -236,6 +236,30 @@
 				"security": [],
 				"parameters": []
 			}
+		},
+		"/auth/youtube/refresh": {
+			"post": {
+				"operationId": "RefreshYoutubeAccessToken",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/auth/youtube": {
+			"get": {
+				"operationId": "AuthYoutube",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
 		}
 	},
 	"servers": [

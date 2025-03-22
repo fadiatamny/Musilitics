@@ -1,7 +1,7 @@
 import { Controller, Route, Get, Request, Hidden } from 'tsoa'
 import { Request as ExpressRequest } from 'express'
 import { config } from '../config'
-import { SpotifyService } from '../services'
+import { SpotifyService, YoutubeService } from '../services'
 import { serialize } from '../utils'
 
 @Hidden()
@@ -17,6 +17,21 @@ export class CallbacksController extends Controller {
 
         res.render('loginCallback', {
             cookieName: config.spotify.cookieName,
+            cookieData: encodeURIComponent(serialize(cookieData)),
+            clientOrigin: config.appUri
+        })
+    }
+
+    @Get('/youtube')
+    public async callbackYoutube(
+        @Request() req: ExpressRequest
+    ): Promise<void> {
+        const code = req.query.code as string
+        const res = req.res!
+        const cookieData = await YoutubeService.generateCookieData(code)
+
+        res.render('loginCallback', {
+            cookieName: config.youtube.cookieName,
             cookieData: encodeURIComponent(serialize(cookieData)),
             clientOrigin: config.appUri
         })

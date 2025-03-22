@@ -9,7 +9,7 @@ export const buildAuthMiddleware = (authScope: 'spotify' | 'youtube') => {
 
         const cookie = req.cookies[cookieName]
 
-        if (!cookie) {
+        if (!cookie || cookie === 'undefined') {
             return next(new APIError('Unauthorized', 401))
         }
 

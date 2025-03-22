@@ -1,10 +1,5 @@
 <template>
-    <NeonButton
-        @click="() => {}"
-        color="#ff0000"
-        disabled
-        tooltip="Coming soon!"
-    >
+    <NeonButton @click="loginWithYoutube" color="#ff0000">
         Login with Youtube
     </NeonButton>
 </template>
@@ -19,7 +14,14 @@ export default defineComponent({
         NeonButton
     },
     setup() {
-        return {}
+        const loginWithYoutube = () => {
+            const authUrl = `${import.meta.env.VITE_BACKEND_URI}/api/auth/youtube`
+            window.open(authUrl, '_blank', 'width=500,height=600')
+        }
+
+        return {
+            loginWithYoutube
+        }
     }
 })
 </script>
