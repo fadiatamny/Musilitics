@@ -6,7 +6,7 @@ import {
     YoutubeProfile,
     YoutubeTrack
 } from '../models'
-import { SessionStorage } from '../shared'
+import { Logger, SessionStorage } from '../shared'
 import { google } from 'googleapis'
 import type { Credentials } from 'google-auth-library'
 
@@ -106,6 +106,25 @@ export class YoutubeService {
             const trackName = this.getCleanTrackName(item.snippet!.title!)
 
             const channelId: string = item.snippet!.videoOwnerChannelId!
+
+            if (!channelId) {
+                Logger.warn('Channel ID is missing for item', item)
+
+                tracks.push({
+                    rank: item.snippet!.position! + 1,
+                    name: trackName,
+                    artist: {
+                        name: 'Unknown Artist',
+                        image: null,
+                        link: `https://www.youtube.com`
+                    },
+                    link: `https://www.youtube.com/watch?v=${item.contentDetails!.videoId}`,
+                    image: item.snippet!.thumbnails!.high!.url ?? null
+                })
+
+                continue
+            }
+
             const channelResponse = await youtube.channels.list({
                 auth: this.oauth2Client,
                 id: [channelId],
@@ -139,54 +158,64 @@ export class YoutubeService {
             auth: this.oauth2Client,
             part: ['snippet'],
             playlistId: 'LM',
-            maxResults: 100
+            maxResults: 50
         })
 
         const artistCounts = new Map<
             string,
-            { count: number; name: string; channelId: string }
+            {
+                count: number
+                name: string
+                image: string | null
+                link: string
+            }
         >()
 
         const items = playlistResponse.data.items ?? []
         for (const item of items) {
-            const artistName = item.snippet?.channelTitle
-            const channelId = item.snippet?.channelId
+            const channelId: string = item.snippet!.videoOwnerChannelId!
 
-            if (!artistName || !channelId) continue
+            if (!channelId) {
+                Logger.warn('Channel ID is missing for item', item)
+                continue
+            }
 
             if (artistCounts.has(channelId)) {
-                artistCounts.get(channelId)!.count += 1
-            } else {
-                artistCounts.set(channelId, {
-                    count: 1,
-                    name: artistName,
-                    channelId
-                })
+                const artist = artistCounts.get(channelId)!
+                artist.count++
+
+                artistCounts.set(channelId, artist)
+
+                continue
             }
+
+            const channelResponse = await youtube.channels.list({
+                auth: this.oauth2Client,
+                id: [channelId],
+                part: ['snippet']
+            })
+
+            const channel = channelResponse.data.items![0].snippet!
+            const channelName = channel.title!
+            const channelImage = channel.thumbnails!.high!.url ?? null
+
+            artistCounts.set(channelId, {
+                count: 1,
+                name: channelName,
+                image: channelImage,
+                link: `https://www.youtube.com/channel/${channelId}`
+            })
         }
 
         const sortedArtists = Array.from(artistCounts.values())
             .sort((a, b) => b.count - a.count)
             .slice(0, 10)
 
-        const channelsResponse = await youtube.channels.list({
-            auth: this.oauth2Client,
-            part: ['snippet'],
-            id: sortedArtists.map((artist) => artist.channelId)
-        })
-
-        const channelImages = new Map(
-            channelsResponse.data.items?.map((channel) => [
-                channel.id!,
-                channel.snippet!.thumbnails!.default!.url
-            ])
-        )
-
         return sortedArtists.map((artist, index) => ({
             rank: index + 1,
             name: artist.name,
-            link: `https://www.youtube.com/channel/${artist.channelId}`,
-            image: channelImages.get(artist.channelId) ?? null
+            link: artist.link,
+            image: artist.image
         }))
     }
 

@@ -6,7 +6,7 @@
             :rows="tracks"
             :columns="columns"
             row-key="rank"
-            style="height: 340px;"
+            style="height: 340px"
         >
             <template #name="{ row }">
                 <div
@@ -47,24 +47,36 @@
                 >
                     <QAvatar>
                         <img
-                            :src="row.artist.image ?? '/default-album-cover.jpg'"
-                            width="32px"
-                            height="32px"
+                            src="@/assets/default-profile.svg"
+                            width="32"
+                            height="32"
                             style="
                                 border-radius: 50%;
                                 background: var(--profile-background);
+                                position: absolute;
+                                top: 6px;
+                                left: 6px;
+                            "
+                            alt="Default Cover"
+                        />
+                        <img
+                            :src="row.artist.image"
+                            @error="
+                                (e: any) => (e.target.style.display = 'none')
+                            "
+                            width="32"
+                            height="32"
+                            style="
+                                border-radius: 50%;
+                                background: var(--profile-background);
+                                position: absolute;
+                                top: 6px;
+                                left: 6px;
                             "
                             alt="Profile Image"
                         />
                     </QAvatar>
-                    <p
-                        style="
-                            margin: 0;
-                            text-overflow: ellipsis;
-                            overflow: hidden;
-                            width: calc(100% - 50px);
-                        "
-                    >
+                    <p style="margin: 0; margin-left: 32px">
                         {{ row.artist.name }}
                     </p>
                 </div>
@@ -113,7 +125,7 @@ export default defineComponent({
                 label: 'Channel',
                 align: 'left',
                 sortable: true
-            },
+            }
         ]
 
         const openTab = (albumLink: string) => {
