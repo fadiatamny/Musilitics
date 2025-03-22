@@ -1,5 +1,11 @@
 import { config } from '../config'
-import { APIError } from '../models'
+import {
+    APIError,
+    YoutubeArtist,
+    YoutubeGenre,
+    YoutubeProfile,
+    YoutubeTrack
+} from '../models'
 import { SessionStorage } from '../shared'
 import { google } from 'googleapis'
 import type { Credentials } from 'google-auth-library'
@@ -51,5 +57,114 @@ export class YoutubeService {
     //#endregion Authentication
 
     //#region Operations
+
+    public static async fetchProfile(): Promise<YoutubeProfile> {
+        const accessToken = SessionStorage.get<string>('accessToken')
+        this.oauth2Client.setCredentials({ access_token: accessToken })
+
+        const youtube = google.youtube('v3')
+        const response = await youtube.channels.list({
+            auth: this.oauth2Client,
+            mine: true,
+            part: ['snippet']
+        })
+
+        const channel = response.data.items?.[0]
+        return {
+            name: channel?.snippet?.title ?? 'Unknown',
+            image: channel?.snippet?.thumbnails?.default?.url ?? null
+        }
+    }
+
+
+    public static async fetchTopTracks(): Promise<YoutubeTrack[]> {
+        const accessToken = SessionStorage.get<string>('accessToken')
+        this.oauth2Client.setCredentials({ access_token: accessToken })
+
+        const youtube = google.youtube('v3')
+
+        const response = await youtube.playlistItems.list({
+            auth: this.oauth2Client,
+            part: ['snippet', 'contentDetails'],
+            playlistId: 'LM',
+            maxResults: 10
+        })
+
+        const items = response.data.items ?? []
+
+        return (
+            items?.map((item) => ({
+                rank: item.snippet!.position!,
+                name: item.snippet!.title!,
+                link: `https://www.youtube.com/watch?v=${item.contentDetails!.videoId}`,
+                image: item.snippet!.thumbnails!.high!.url ?? null
+            })) ?? []
+        )
+    }
+
+    public static async fetchTopArtists(): Promise<YoutubeArtist[]> {
+        const accessToken = SessionStorage.get<string>('accessToken')
+        this.oauth2Client.setCredentials({ access_token: accessToken })
+
+        const youtube = google.youtube('v3')
+        const playlistResponse = await youtube.playlistItems.list({
+            auth: this.oauth2Client,
+            part: ['snippet'],
+            playlistId: 'LM',
+            maxResults: 100
+        })
+
+        const artistCounts = new Map<
+            string,
+            { count: number; name: string; channelId: string }
+        >()
+
+        const items = playlistResponse.data.items ?? []
+        for (const item of items) {
+            const artistName = item.snippet?.channelTitle
+            const channelId = item.snippet?.channelId
+
+            if (!artistName || !channelId) continue
+
+            if (artistCounts.has(channelId)) {
+                artistCounts.get(channelId)!.count += 1
+            } else {
+                artistCounts.set(channelId, {
+                    count: 1,
+                    name: artistName,
+                    channelId
+                })
+            }
+        }
+
+        const sortedArtists = Array.from(artistCounts.values())
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 10)
+
+        const channelsResponse = await youtube.channels.list({
+            auth: this.oauth2Client,
+            part: ['snippet'],
+            id: sortedArtists.map((artist) => artist.channelId)
+        })
+
+        const channelImages = new Map(
+            channelsResponse.data.items?.map((channel) => [
+                channel.id!,
+                channel.snippet!.thumbnails!.default!.url
+            ])
+        )
+
+        return sortedArtists.map((artist, index) => ({
+            rank: index + 1,
+            name: artist.name,
+            link: `https://www.youtube.com/channel/${artist.channelId}`,
+            image: channelImages.get(artist.channelId) ?? null
+        }))
+    }
+
+    public static async fetchTopGenres(): Promise<YoutubeGenre[]> {
+      return [];
+    }
+
     //#endregion Operations
 }

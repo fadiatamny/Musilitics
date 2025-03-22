@@ -196,7 +196,7 @@ export class SpotifyService {
     }
 
     public static async fetchTopGenres(): Promise<SpotifyGenre[]> {
-        const data = new Map<string, number>()
+        const genreCounts = new Map<string, number>()
 
         let page = 0
         do {
@@ -225,17 +225,17 @@ export class SpotifyService {
 
                 for (let i = 0; i < artistGenres.length; i++) {
                     const genre = artistGenres[i]
-                    data.set(
+                    genreCounts.set(
                         genre,
-                        data.has(genre) ? data.get(genre)! + 1 : 10 - i + 1
+                        genreCounts.has(genre) ? genreCounts.get(genre)! + 1 : 10 - i + 1
                     )
                 }
             }
 
             page++
-        } while (data.size < 10)
+        } while (genreCounts.size < 10)
 
-        const sortedKeys = Array.from(data.entries())
+        const sortedKeys = Array.from(genreCounts.entries())
             .slice(0, 10)
             .sort(([, valueA], [, valueB]) => valueB - valueA)
             .map(([key]) => key)
