@@ -22,7 +22,12 @@
             </div>
         </div>
     </div>
-    <SkeletonDashboard v-else @logout="handleLogout" :isError="!!error" />
+    <SkeletonDashboard
+        v-else
+        @logout="handleLogout"
+        :isError="!!error"
+        style="min-width: 70%; max-width: 70%; width: 100%"
+    />
 </template>
 
 <script lang="ts">

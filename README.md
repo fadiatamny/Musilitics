@@ -9,10 +9,10 @@ A better way to see your music habits and trends clearly
 ----
 ## Roadmap
 
-- [ ] View your music habits and trends
-  - [ ] View graphs showing based on category
-  - [ ] View top 5 artists
-  - [ ] View top streamed
+- [x] View your music habits and trends
+  - [x] View top 10 songs
+  - [x] View top 10 artists
+  - [x] View top 10 genres
 - [ ] Mailing service
   - [ ] Send monthly summary of music flavour and habbits with recommendations for what to listen to next
 - [ ] Sync music playlists across platforms
