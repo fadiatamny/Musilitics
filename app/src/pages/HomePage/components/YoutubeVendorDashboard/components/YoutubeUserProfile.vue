@@ -5,7 +5,6 @@
             align-items: center;
             justify-content: space-between;
         "
-        :style="computedStyles"
     >
         <div class="profile-wrapper">
             <QAvatar>
@@ -27,18 +26,14 @@
 <script lang="ts">
 import { defineComponent, type PropType, computed } from 'vue'
 import { QAvatar, QIcon, QBtn } from 'quasar'
-import type { SpotifyProfile } from '@/types'
+import type { YoutubeProfile } from '@/types'
 import { toRefs } from 'vue'
 
 export default defineComponent({
-    name: 'UserProfile',
+    name: 'YoutubeUserProfile',
     props: {
         profile: {
-            type: Object as PropType<SpotifyProfile | null>,
-            required: true
-        },
-        color: {
-            type: String,
+            type: Object as PropType<YoutubeProfile | null>,
             required: true
         }
     },
@@ -47,8 +42,8 @@ export default defineComponent({
         QIcon,
         QBtn
     },
-    setup(props: { profile: SpotifyProfile | null; color: string }) {
-        const { profile, color } = toRefs(props)
+    setup(props: { profile: YoutubeProfile | null }) {
+        const { profile } = toRefs(props)
 
         const profileImage = computed(
             () => profile.value?.image ?? '@/assets/default-profile.svg'
@@ -56,14 +51,9 @@ export default defineComponent({
 
         const profileName = computed(() => profile.value?.name ?? 'Guest')
 
-        const computedStyles = computed(() => ({
-            '--neon-color': color.value
-        }))
-
         return {
             profileImage,
-            profileName,
-            computedStyles
+            profileName
         }
     }
 })
@@ -82,9 +72,9 @@ export default defineComponent({
     height: 40px;
     border-radius: 50%;
 
-    color: var(--neon-color, #1db954);
-    box-shadow: 0 0 8px var(--neon-color, #1db954);
-    border: 2px solid var(--neon-color, #1db954);
+    color: #ff0000;
+    box-shadow: 0 0 8px #ff0000;
+    border: 2px solid #ff0000;
 }
 
 .profile-name {

@@ -43,7 +43,8 @@
 					"album": {
 						"properties": {
 							"image": {
-								"type": "string"
+								"type": "string",
+								"nullable": true
 							},
 							"link": {
 								"type": "string"
@@ -120,7 +121,8 @@
 						"format": "double"
 					},
 					"image": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					}
 				},
 				"required": [
@@ -165,6 +167,146 @@
 				],
 				"type": "object",
 				"additionalProperties": true
+			},
+			"YoutubeProfile": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"image": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"name",
+					"image"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"YoutubeTrack": {
+				"properties": {
+					"rank": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					},
+					"link": {
+						"type": "string"
+					},
+					"image": {
+						"type": "string",
+						"nullable": true
+					},
+					"artist": {
+						"properties": {
+							"link": {
+								"type": "string"
+							},
+							"image": {
+								"type": "string",
+								"nullable": true
+							},
+							"name": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"link",
+							"image",
+							"name"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"rank",
+					"name",
+					"link",
+					"image",
+					"artist"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"YoutubeGenre": {
+				"properties": {
+					"genre": {
+						"type": "string"
+					},
+					"rank": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"genre",
+					"rank"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"YoutubeArtist": {
+				"properties": {
+					"rank": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					},
+					"link": {
+						"type": "string"
+					},
+					"image": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"rank",
+					"name",
+					"link",
+					"image"
+				],
+				"type": "object",
+				"additionalProperties": true
+			},
+			"APIYoutubeDetails": {
+				"properties": {
+					"profile": {
+						"$ref": "#/components/schemas/YoutubeProfile"
+					},
+					"tracks": {
+						"items": {
+							"$ref": "#/components/schemas/YoutubeTrack"
+						},
+						"type": "array"
+					},
+					"genres": {
+						"items": {
+							"$ref": "#/components/schemas/YoutubeGenre"
+						},
+						"type": "array"
+					},
+					"artists": {
+						"items": {
+							"$ref": "#/components/schemas/YoutubeArtist"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"profile",
+					"tracks",
+					"genres",
+					"artists"
+				],
+				"type": "object",
+				"additionalProperties": true
 			}
 		},
 		"securitySchemes": {}
@@ -185,6 +327,25 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/APISpotifyDetails"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/metrics/youtube": {
+			"get": {
+				"operationId": "Get Youtube music Analytical Data",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/APIYoutubeDetails"
 								}
 							}
 						}

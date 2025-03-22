@@ -5,9 +5,9 @@
         :style="computedStyles"
     >
         <div class="dashboard-container">
-            <UserProfile :profile="profileData" @logout="handleLogout" :color="neonColor" />
+            <YoutubeUserProfile :profile="profileData" @logout="handleLogout" />
             <q-separator inset />
-            <TracksTable :tracks="tracksData" />
+            <YoutubeTracksTable :tracks="tracksData" />
             <q-separator inset />
             <div
                 style="
@@ -17,8 +17,8 @@
                     height: 20%;
                 "
             >
-                <ArtistsTable :artists="artistsData" />
-                <GenresTable :genres="genresData" />
+                <YoutubeArtistsTable :artists="artistsData" />
+                <YoutubeGenresTable :genres="genresData" />
             </div>
         </div>
     </div>
@@ -27,7 +27,7 @@
         @logout="handleLogout"
         :isError="!!error"
         style="min-width: 70%; max-width: 70%; width: 100%"
-        :color="neonColor"
+        color="#FF0000"
     />
 </template>
 
@@ -35,37 +35,33 @@
 import { config } from '@/config'
 import { defineComponent, onMounted, ref } from 'vue'
 import {
-    UserProfile,
-    ArtistsTable,
-    GenresTable,
-    TracksTable,
-    SkeletonDashboard
+    YoutubeUserProfile,
+    YoutubeArtistsTable,
+    YoutubeGenresTable,
+    YoutubeTracksTable
 } from './components'
+import { SkeletonDashboard } from '../shared'
 
-import { deleteCookie, fetchSpotifyData, fetchYoutubeData } from '@/utils'
+import { deleteCookie, fetchYoutubeData } from '@/utils'
 import { toRefs, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import type {
-    SpotifyTrack,
-    SpotifyProfile,
-    SpotifyArtist,
-    SpotifyGenre
+    YoutubeArtist,
+    YoutubeGenre,
+    YoutubeProfile,
+    YoutubeTrack
 } from '@/types'
 
 export default defineComponent({
-    name: 'VendorDashboard',
+    name: 'YoutubeVendorDashboard',
     components: {
-        UserProfile,
-        ArtistsTable,
-        GenresTable,
-        TracksTable,
+        YoutubeUserProfile,
+        YoutubeArtistsTable,
+        YoutubeGenresTable,
+        YoutubeTracksTable,
         SkeletonDashboard
     },
     props: {
-        vendor: {
-            type: String,
-            required: true
-        },
         expanded: {
             type: Boolean,
             default: false
@@ -75,39 +71,31 @@ export default defineComponent({
             default: false
         }
     },
-    setup(props: { vendor: string; hidden: boolean }) {
-        const { vendor, hidden } = toRefs(props)
+    setup(props: { hidden: boolean }) {
+        const { hidden } = toRefs(props)
         const router = useRouter()
 
-        const profileData = ref<SpotifyProfile | null>(null)
-        const tracksData = ref<SpotifyTrack[]>([])
-        const artistsData = ref<SpotifyArtist[]>([])
-        const genresData = ref<SpotifyGenre[]>([])
+        const profileData = ref<YoutubeProfile | null>(null)
+        const tracksData = ref<YoutubeTrack[]>([])
+        const artistsData = ref<YoutubeArtist[]>([])
+        const genresData = ref<YoutubeGenre[]>([])
         const error = ref<unknown | null>(null)
         const loading = ref(true)
 
-        const neonColor = computed(() => vendor.value === 'spotify' ? '#1DB954' : '#FF0000')
         const computedStyles = computed(() => ({
-            display: hidden.value ? 'none' : 'block',
-            '--neon-color': vendor.value === 'spotify' ? '#1DB954' : '#FF0000'
+            display: hidden.value ? 'none' : 'block'
         }))
 
-
         const handleLogout = () => {
-            const vendorName = vendor.value as 'spotify' | 'youtube'
-            const { cookieName } = config[vendorName]
+            deleteCookie(config.youtube.cookieName)
 
-            deleteCookie(cookieName)
-
-            router.push({ name: 'Login' })
+            router.push({ name: 'Home', force: true, replace: true })
         }
 
         onMounted(async () => {
-            const dataFetcher =
-                vendor.value === 'spotify' ? fetchSpotifyData : fetchYoutubeData
-
             try {
-                const { profile, tracks, artists, genres } = await dataFetcher()
+                const { profile, tracks, artists, genres } =
+                    await fetchYoutubeData()
 
                 profileData.value = profile
                 tracksData.value = tracks
@@ -121,7 +109,6 @@ export default defineComponent({
 
         return {
             computedStyles,
-            neonColor,
             loading,
             error,
             handleLogout,
@@ -142,7 +129,7 @@ export default defineComponent({
     padding: 20px;
     width: 100%;
 
-    border: 2px solid var(--neon-color, #1db954);
+    border: 2px solid #ff0000;
     box-shadow: 0 0 5vw rgba(180, 180, 255, 0.3);
     backdrop-filter: blur(1vw) saturate(1.8);
     -webkit-backdrop-filter: blur(1vw) saturate(1.8);

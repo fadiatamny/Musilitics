@@ -7,6 +7,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { NeonButton } from '@/components'
+import { loginWithSpotify } from '@/utils'
 
 export default defineComponent({
     name: 'SpotifyLogin',
@@ -14,12 +15,6 @@ export default defineComponent({
         NeonButton
     },
     setup() {
-
-        const loginWithSpotify = () => {
-            const authUrl = `${import.meta.env.VITE_BACKEND_URI}/api/auth/spotify`
-            window.open(authUrl, '_blank', 'width=500,height=600')
-        }
-
         return {
             loginWithSpotify
         }

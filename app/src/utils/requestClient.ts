@@ -14,16 +14,34 @@ apiClient.interceptors.response.use(
         if (
             error.response?.status === 401 &&
             error.response.data?.message === 'Token expired' &&
-            !originalRequest.url?.includes('/auth/spotify/refresh') // Prevent loop
+            !originalRequest.url?.includes('/refresh') // Prevent loop
         ) {
-          debugger
-            try {
-                await apiClient.post('/auth/spotify/refresh')
-                return apiClient.request(error.config!)
-            } catch (refreshError) {
-                return Promise.reject(refreshError)
-            }
+          if (originalRequest.url?.includes('/spotify')) {
+            await handleSpotifyTokenRefresh(error)
+          }
+          if (originalRequest.url?.includes('/youtube')) {
+            await handleYoutubeTokenRefresh(error)
+          }
         }
         return Promise.reject(error)
     }
 )
+
+async function handleSpotifyTokenRefresh(error: AxiosError<any>) {
+    try {
+        await apiClient.post('/auth/spotify/refresh')
+        return apiClient.request(error.config!)
+    } catch (refreshError) {
+        return Promise.reject(refreshError)
+    }
+}
+
+
+async function handleYoutubeTokenRefresh(error: AxiosError<any>) {
+    try {
+        await apiClient.post('/auth/spotify/refresh')
+        return apiClient.request(error.config!)
+    } catch (refreshError) {
+        return Promise.reject(refreshError)
+    }
+}

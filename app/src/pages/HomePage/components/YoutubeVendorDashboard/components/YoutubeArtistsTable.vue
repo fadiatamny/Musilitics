@@ -15,31 +15,35 @@
                     style="gap: 10px"
                     @click="openTab(row.link)"
                 >
-                    <QAvatar>
-                        <img
-                            :src="row.image ?? '/default-album-cover.jpg'"
-                            width="32px"
-                            height="32px"
-                            style="
-                                border-radius: 50%;
-                                background: var(--profile-background);
-                            "
-                            alt="Profile Image"
-                        />
-                    </QAvatar>
-                    <p style="margin: 0">
+                    <img
+                        src="@/assets/default-profile.svg"
+                        width="32"
+                        height="32"
+                        style="
+                            border-radius: 50%;
+                            background: var(--profile-background);
+                            position: absolute;
+                            top: 6px;
+                            left: 6px;
+                        "
+                        alt="Default Cover"
+                    />
+                    <img
+                        :src="row.image"
+                        @error="(e: any) => (e.target.style.display = 'none')"
+                        width="32"
+                        height="32"
+                        style="
+                            border-radius: 50%;
+                            background: var(--profile-background);
+                            position: absolute;
+                            top: 6px;
+                            left: 6px;
+                        "
+                        alt="Profile Image"
+                    />
+                    <p style="margin: 0; margin-left: 32px">
                         {{ row.name }}
-                    </p>
-                </div>
-            </template>
-            <template #artist="{ row }">
-                <div
-                    class="flex items-center clickable"
-                    style="gap: 10px"
-                    @click="openTab(row.artist.link)"
-                >
-                    <p style="margin: 0">
-                        {{ row.artist.name }}
                     </p>
                 </div>
             </template>
@@ -51,25 +55,25 @@
 import { defineComponent, type PropType } from 'vue'
 import { type QTableProps } from 'quasar'
 import { MTable } from '@/components'
-import type { SpotifyArtist } from '@/types'
+import type { YoutubeArtist } from '@/types'
 
 export default defineComponent({
-    name: 'ArtistsTable',
+    name: 'YoutubeArtistsTable',
     props: {
         artists: {
-            type: Array as PropType<SpotifyArtist[]>,
+            type: Array as PropType<YoutubeArtist[]>,
             required: true
         }
     },
     components: {
-        MTable
+        MTable,
     },
     setup() {
         const columns: QTableProps['columns'] = [
             {
                 name: 'rank',
                 field: 'rank',
-                label: '',
+                label: '#',
                 align: 'left',
                 sortable: true,
                 headerStyle: 'width: 50px'
@@ -80,14 +84,6 @@ export default defineComponent({
                 label: 'Name',
                 align: 'left',
                 sortable: true
-            },
-            {
-                name: 'popularity',
-                field: 'popularity',
-                label: 'Popularity',
-                align: 'left',
-                sortable: true,
-                headerStyle: 'width: 50px'
             }
         ]
 

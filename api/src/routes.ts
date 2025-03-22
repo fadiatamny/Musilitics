@@ -34,7 +34,7 @@ const models: TsoaRoute.Models = {
             "name": {"dataType":"string","required":true},
             "link": {"dataType":"string","required":true},
             "popularity": {"dataType":"double","required":true},
-            "album": {"dataType":"nestedObjectLiteral","nestedProperties":{"image":{"dataType":"string","required":true},"link":{"dataType":"string","required":true},"name":{"dataType":"string","required":true}},"required":true},
+            "album": {"dataType":"nestedObjectLiteral","nestedProperties":{"image":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"link":{"dataType":"string","required":true},"name":{"dataType":"string","required":true}},"required":true},
             "artist": {"dataType":"nestedObjectLiteral","nestedProperties":{"link":{"dataType":"string","required":true},"name":{"dataType":"string","required":true}},"required":true},
         },
         "additionalProperties": true,
@@ -56,7 +56,7 @@ const models: TsoaRoute.Models = {
             "name": {"dataType":"string","required":true},
             "link": {"dataType":"string","required":true},
             "popularity": {"dataType":"double","required":true},
-            "image": {"dataType":"string","required":true},
+            "image": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
         },
         "additionalProperties": true,
     },
@@ -68,6 +68,58 @@ const models: TsoaRoute.Models = {
             "tracks": {"dataType":"array","array":{"dataType":"refObject","ref":"SpotifyTrack"},"required":true},
             "genres": {"dataType":"array","array":{"dataType":"refObject","ref":"SpotifyGenre"},"required":true},
             "artists": {"dataType":"array","array":{"dataType":"refObject","ref":"SpotifyArtist"},"required":true},
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "YoutubeProfile": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "image": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "YoutubeTrack": {
+        "dataType": "refObject",
+        "properties": {
+            "rank": {"dataType":"double","required":true},
+            "name": {"dataType":"string","required":true},
+            "link": {"dataType":"string","required":true},
+            "image": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "artist": {"dataType":"nestedObjectLiteral","nestedProperties":{"link":{"dataType":"string","required":true},"image":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"name":{"dataType":"string","required":true}},"required":true},
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "YoutubeGenre": {
+        "dataType": "refObject",
+        "properties": {
+            "genre": {"dataType":"string","required":true},
+            "rank": {"dataType":"double","required":true},
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "YoutubeArtist": {
+        "dataType": "refObject",
+        "properties": {
+            "rank": {"dataType":"double","required":true},
+            "name": {"dataType":"string","required":true},
+            "link": {"dataType":"string","required":true},
+            "image": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": true,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "APIYoutubeDetails": {
+        "dataType": "refObject",
+        "properties": {
+            "profile": {"ref":"YoutubeProfile","required":true},
+            "tracks": {"dataType":"array","array":{"dataType":"refObject","ref":"YoutubeTrack"},"required":true},
+            "genres": {"dataType":"array","array":{"dataType":"refObject","ref":"YoutubeGenre"},"required":true},
+            "artists": {"dataType":"array","array":{"dataType":"refObject","ref":"YoutubeArtist"},"required":true},
         },
         "additionalProperties": true,
     },
@@ -107,6 +159,35 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'spotifyDetails',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMetricsController_youtubeDetails: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/api/metrics/youtube',
+            ...(fetchMiddlewares<RequestHandler>(MetricsController)),
+            ...(fetchMiddlewares<RequestHandler>(MetricsController.prototype.youtubeDetails)),
+
+            async function MetricsController_youtubeDetails(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMetricsController_youtubeDetails, request, response });
+
+                const controller = new MetricsController();
+
+              await templateService.apiHandler({
+                methodName: 'youtubeDetails',
                 controller,
                 response,
                 next,

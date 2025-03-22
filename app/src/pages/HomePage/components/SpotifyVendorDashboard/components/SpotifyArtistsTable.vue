@@ -1,12 +1,13 @@
 <template>
     <div class="container">
-        <h5 style="margin: 0; margin-bottom: 10px">Top Tracks</h5>
+        <h6 style="margin: 0; margin-bottom: 10px">Top Artists</h6>
 
         <MTable
-            :rows="tracks"
+            :rows="artists"
             :columns="columns"
             row-key="rank"
-            style="height: 340px;"
+            :rowsPerPage="3"
+            style="height: 245px"
         >
             <template #name="{ row }">
                 <div
@@ -14,6 +15,16 @@
                     style="gap: 10px"
                     @click="openTab(row.link)"
                 >
+                    <img
+                        :src="row.image ?? '/default-album-cover.jpg'"
+                        width="32px"
+                        height="32px"
+                        style="
+                            border-radius: 50%;
+                            background: var(--profile-background);
+                        "
+                        alt="Profile Image"
+                    />
                     <p style="margin: 0">
                         {{ row.name }}
                     </p>
@@ -30,36 +41,6 @@
                     </p>
                 </div>
             </template>
-            <template #album="{ row }">
-                <div
-                    class="flex items-center clickable full-width"
-                    style="gap: 10px"
-                    @click="openTab(row.album.link)"
-                >
-                    <QAvatar>
-                        <img
-                            :src="row.album.image ?? '/default-album-cover.jpg'"
-                            width="32px"
-                            height="32px"
-                            style="
-                                border-radius: 50%;
-                                background: var(--profile-background);
-                            "
-                            alt="Profile Image"
-                        />
-                    </QAvatar>
-                    <p
-                        style="
-                            margin: 0;
-                            text-overflow: ellipsis;
-                            overflow: hidden;
-                            width: calc(100% - 50px);
-                        "
-                    >
-                        {{ row.album.name }}
-                    </p>
-                </div>
-            </template>
         </MTable>
     </div>
 </template>
@@ -68,13 +49,13 @@
 import { defineComponent, type PropType } from 'vue'
 import { type QTableProps } from 'quasar'
 import { MTable } from '@/components'
-import type { SpotifyTrack } from '@/types'
+import type { SpotifyArtist } from '@/types'
 
 export default defineComponent({
-    name: 'TracksTable',
+    name: 'SpotifyArtistsTable',
     props: {
-        tracks: {
-            type: Array as PropType<SpotifyTrack[]>,
+        artists: {
+            type: Array as PropType<SpotifyArtist[]>,
             required: true
         }
     },
@@ -86,7 +67,7 @@ export default defineComponent({
             {
                 name: 'rank',
                 field: 'rank',
-                label: '',
+                label: '#',
                 align: 'left',
                 sortable: true,
                 headerStyle: 'width: 50px'
@@ -97,22 +78,6 @@ export default defineComponent({
                 label: 'Name',
                 align: 'left',
                 sortable: true
-            },
-            {
-                name: 'artist',
-                field: 'artist.name',
-                label: 'Artist',
-                align: 'left',
-                sortable: true,
-                headerStyle: 'width: 25%'
-            },
-            {
-                name: 'album',
-                field: 'album.name',
-                label: 'Album',
-                align: 'left',
-                sortable: true,
-                headerStyle: 'width: 25%'
             },
             {
                 name: 'popularity',

@@ -1,7 +1,6 @@
-export interface SpotifyArtist {
+export interface YoutubeArtist {
     rank: number
     name: string
     link: string
-    popularity: number
     image: string | null
 }
